@@ -1430,17 +1430,6 @@
 
             <!-- Recommendations Section -->
             <div id="recommendationsSection" class="content-section">
-    <div class="section-header">
-        <div>
-            <h2 class="section-title">Recommended for You</h2>
-            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Smart picks based on your favorites and interests.</p>
-        </div>
-        <button class="btn btn-primary" onclick="refreshRecommendations()" style="width: auto;">
-            ✨ Recommended for Me
-        </button>
-    </div>
-    <div id="recommendationsGrid" class="business-grid"></div>
-</div>
                 <div class="section-header">
                     <h2 class="section-title">Recommended for You</h2>
                 </div>
@@ -2240,9 +2229,8 @@
             } else if (section === 'deals') {
                 renderBusinesses(allBusinesses, 'dealsGrid');
             } else if (section === 'recommendations') {
-    // This ensures the grid is populated as soon as the tab is clicked
-    refreshRecommendations(); 
-}
+                const recommendations = getRecommendations();
+                renderBusinesses(recommendations, 'recommendationsGrid');
             }
 
             // Trigger scroll animations for new content
@@ -2341,48 +2329,7 @@
                 b.category === topCategory && !favs.includes(b.id)
             );
         }
-/**
- * RECOMMENDATION ENGINE
- * Uses user 'favorites' data to find common categories and suggests 
- * highly-rated businesses the user hasn't favorited yet.
- */
-function refreshRecommendations() {
-    const userFavs = users[currentUser].favorites;
-    
-    // 1. If user has no favorites, recommend the top 3 highest rated businesses in town
-    if (userFavs.length === 0) {
-        const topRated = [...allBusinesses]
-            .sort((a, b) => getAverageRating(b) - getAverageRating(a))
-            .slice(0, 3);
-        renderBusinesses(topRated, 'recommendationsGrid');
-        return;
-    }
 
-    // 2. Map out which categories the user likes most based on favorites
-    const categoryInterest = {};
-    allBusinesses.forEach(b => {
-        if (userFavs.includes(b.id)) {
-            categoryInterest[b.category] = (categoryInterest[b.category] || 0) + 1;
-        }
-    });
-
-    // 3. Find businesses that match these categories but aren't already favorited
-    const recommendations = allBusinesses.filter(b => {
-        const isNotAlreadyFavorite = !userFavs.includes(b.id);
-        const isInterpretedCategory = categoryInterest[b.category] > 0;
-        return isNotAlreadyFavorite && isInterpretedCategory;
-    });
-
-    // 4. Sort by highest rating first
-    recommendations.sort((a, b) => getAverageRating(b) - getAverageRating(a));
-
-    // 5. Push to the front-end grid
-    renderBusinesses(recommendations.slice(0, 6), 'recommendationsGrid');
-    
-    // Add a small activity log entry
-    addActivity("Engine updated your recommendations! 🎯");
-    triggerScrollAnimations();
-}
         // Review Modal & CAPTCHA
         function openReviewModal(businessId) {
             selectedBusinessForReview = businessId;
