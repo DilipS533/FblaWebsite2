@@ -980,6 +980,17 @@
             white-space: nowrap;
         }
 
+        .map-fake-street-label {
+            background: rgba(0, 78, 100, 0.86);
+            color: #f6f6f6;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 4px;
+            padding: 0.15rem 0.35rem;
+            font-size: 0.67rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
         .business-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -1709,7 +1720,7 @@
                 <div class="map-panel" style="position: static;">
                     <div class="map-title">Businesses on Map</div>
                     <p style="margin: 0 0.25rem 0.75rem; color: var(--text-secondary); font-size: 0.9rem;">
-                        Street layout is map-inspired, while all place names are fictional for this FBLA project.
+                        Realistic street layout with fictional place labels for this FBLA demonstration.
                     </p>
                     <div class="map-search-row">
                         <input
@@ -2047,6 +2058,18 @@
             { name: 'Easton Arts Quarter', coords: [33.7665, -84.3496] },
             { name: 'South Market Row', coords: [33.7374, -84.3895] }
         ];
+        const FAKE_STREET_LABELS = [
+            { name: 'Founders Parkway', coords: [33.7730, -84.4020] },
+            { name: 'Civic Loop', coords: [33.7640, -84.3882] },
+            { name: 'Summit Avenue', coords: [33.7860, -84.3830] },
+            { name: 'Harborline Drive', coords: [33.7515, -84.3710] },
+            { name: 'Elmbridge Street', coords: [33.7440, -84.3955] }
+        ];
+        const FAKE_STREET_LINES = [
+            [[33.8025, -84.4085], [33.7360, -84.3600]],
+            [[33.7915, -84.4210], [33.7420, -84.3440]],
+            [[33.8005, -84.3860], [33.7350, -84.3860]]
+        ];
         let townMap = null;
         let townMapMarkers = null;
         let townMapBusinessMarkers = {};
@@ -2370,10 +2393,9 @@
                 maxZoom: 17
             }).setView(MAP_CENTER, 12);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-                subdomains: 'abcd',
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; OpenStreetMap &copy; CARTO'
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(townMap);
 
             FAKE_DISTRICT_LABELS.forEach((district) => {
@@ -2383,6 +2405,23 @@
                     iconSize: [0, 0]
                 });
                 L.marker(district.coords, { icon: labelIcon, interactive: false }).addTo(townMap);
+            });
+
+            FAKE_STREET_LINES.forEach((line) => {
+                L.polyline(line, {
+                    color: '#004e64',
+                    weight: 3,
+                    opacity: 0.35
+                }).addTo(townMap);
+            });
+
+            FAKE_STREET_LABELS.forEach((street) => {
+                const streetIcon = L.divIcon({
+                    className: 'map-fake-street-label',
+                    html: street.name,
+                    iconSize: [0, 0]
+                });
+                L.marker(street.coords, { icon: streetIcon, interactive: false }).addTo(townMap);
             });
 
             townMapMarkers = L.layerGroup().addTo(townMap);
