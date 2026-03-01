@@ -925,11 +925,59 @@
             margin: 0.25rem 0.25rem 0.75rem;
         }
 
+        .map-search-row {
+            display: flex;
+            gap: 0.6rem;
+            margin: 0 0.25rem 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .map-search-input {
+            flex: 1;
+            min-width: 220px;
+            border: 2px solid #d1dbe1;
+            border-radius: 10px;
+            padding: 0.75rem 0.85rem;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            background: var(--card-bg);
+        }
+
+        .map-search-input:focus {
+            outline: none;
+            border-color: var(--sunset-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+        }
+
+        .map-search-message {
+            margin: 0 0.25rem 0.75rem;
+            min-height: 1.1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
         .business-map {
             width: 100%;
             height: 420px;
             border-radius: 12px;
             overflow: hidden;
+            border: 1px solid rgba(0, 78, 100, 0.2);
+        }
+
+        .business-map .leaflet-container {
+            background: #f2f5f7;
+        }
+
+        .map-fake-label {
+            background: rgba(26, 35, 50, 0.86);
+            color: #f6f6f6;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 0.2rem 0.45rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
         }
 
         .business-card {
@@ -1661,8 +1709,21 @@
                 <div class="map-panel" style="position: static;">
                     <div class="map-title">Businesses on Map</div>
                     <p style="margin: 0 0.25rem 0.75rem; color: var(--text-secondary); font-size: 0.9rem;">
-                        Fictional, not-to-scale town map for FBLA Coding & Programming demonstration.
+                        Street layout is map-inspired, while all place names are fictional for this FBLA project.
                     </p>
+                    <div class="map-search-row">
+                        <input
+                            type="text"
+                            id="mapSearchInput"
+                            class="map-search-input"
+                            list="mapBusinessOptions"
+                            placeholder="Search a business on the map..."
+                            onkeydown="if (event.key === 'Enter') searchMapBusiness();"
+                        >
+                        <button type="button" class="btn btn-secondary" onclick="searchMapBusiness()">Search</button>
+                    </div>
+                    <datalist id="mapBusinessOptions"></datalist>
+                    <div id="mapSearchMessage" class="map-search-message" aria-live="polite"></div>
                     <div id="townMap" class="business-map" style="height: 560px;"></div>
                 </div>
             </div>
@@ -1966,21 +2027,29 @@
         let allBusinesses = [...businesses];
         let activityLog = [];
         const APP_STORAGE_KEY = 'townsquare-app-state-v1';
-        const MAP_BOUNDS = [[0, 0], [100, 100]];
+        const MAP_CENTER = [33.7490, -84.3880];
         const MAP_COORDS = {
-            1: [18, 24],
-            2: [31, 72],
-            3: [44, 61],
-            4: [67, 83],
-            5: [76, 54],
-            6: [22, 48],
-            7: [58, 38],
-            8: [73, 21],
-            9: [40, 18],
-            10: [52, 67]
+            1: [33.7603, -84.3880],
+            2: [33.7726, -84.3654],
+            3: [33.7800, -84.3684],
+            4: [33.7898, -84.3523],
+            5: [33.7850, -84.3876],
+            6: [33.7567, -84.3897],
+            7: [33.7608, -84.3572],
+            8: [33.7758, -84.3834],
+            9: [33.7477, -84.3696],
+            10: [33.7874, -84.3831]
         };
+        const FAKE_DISTRICT_LABELS = [
+            { name: 'Northgate Borough', coords: [33.8018, -84.4020] },
+            { name: 'Riverbend Commons', coords: [33.7637, -84.4185] },
+            { name: 'Midtown Junction', coords: [33.7752, -84.3776] },
+            { name: 'Easton Arts Quarter', coords: [33.7665, -84.3496] },
+            { name: 'South Market Row', coords: [33.7374, -84.3895] }
+        ];
         let townMap = null;
         let townMapMarkers = null;
+        let townMapBusinessMarkers = {};
 
         function cloneData(data) {
             return JSON.parse(JSON.stringify(data));
@@ -2272,6 +2341,20 @@
             return Array.isArray(coords) ? coords : null;
         }
 
+        function setMapSearchMessage(message) {
+            const messageEl = document.getElementById('mapSearchMessage');
+            if (!messageEl) return;
+            messageEl.textContent = message || '';
+        }
+
+        function populateMapSearchOptions() {
+            const datalist = document.getElementById('mapBusinessOptions');
+            if (!datalist) return;
+            datalist.innerHTML = allBusinesses
+                .map((business) => `<option value="${business.name}"></option>`)
+                .join('');
+        }
+
         function initTownMap() {
             const mapEl = document.getElementById('townMap');
             if (!mapEl) return;
@@ -2282,44 +2365,26 @@
             }
 
             townMap = L.map('townMap', {
-                crs: L.CRS.Simple,
                 zoomControl: true,
-                attributionControl: false,
-                minZoom: 1,
-                maxZoom: 4
-            });
+                minZoom: 10,
+                maxZoom: 17
+            }).setView(MAP_CENTER, 12);
 
-            L.rectangle(MAP_BOUNDS, {
-                color: '#24526b',
-                weight: 2,
-                fillColor: '#e9f3f7',
-                fillOpacity: 1
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+                subdomains: 'abcd',
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
             }).addTo(townMap);
 
-            for (let i = 10; i < 100; i += 10) {
-                L.polyline([[i, 0], [i, 100]], {
-                    color: '#bdd3df',
-                    weight: 1,
-                    opacity: 0.8,
-                    dashArray: '4 6'
-                }).addTo(townMap);
-                L.polyline([[0, i], [100, i]], {
-                    color: '#bdd3df',
-                    weight: 1,
-                    opacity: 0.8,
-                    dashArray: '4 6'
-                }).addTo(townMap);
-            }
+            FAKE_DISTRICT_LABELS.forEach((district) => {
+                const labelIcon = L.divIcon({
+                    className: 'map-fake-label',
+                    html: district.name,
+                    iconSize: [0, 0]
+                });
+                L.marker(district.coords, { icon: labelIcon, interactive: false }).addTo(townMap);
+            });
 
-            L.marker([84, 12], { opacity: 0.95 }).addTo(townMap)
-                .bindTooltip('North District', { permanent: true, direction: 'right', className: 'map-district-label' });
-            L.marker([18, 86], { opacity: 0.95 }).addTo(townMap)
-                .bindTooltip('Riverwalk Zone', { permanent: true, direction: 'left', className: 'map-district-label' });
-            L.marker([52, 50], { opacity: 0.95 }).addTo(townMap)
-                .bindTooltip('Central Market', { permanent: true, direction: 'center', className: 'map-district-label' });
-
-            townMap.fitBounds(MAP_BOUNDS, { padding: [18, 18] });
-            townMap.setMaxBounds([[-8, -8], [108, 108]]);
             townMapMarkers = L.layerGroup().addTo(townMap);
         }
 
@@ -2328,28 +2393,54 @@
             if (!townMap || !townMapMarkers) return;
 
             townMapMarkers.clearLayers();
+            townMapBusinessMarkers = {};
             const bounds = [];
             businessList.forEach((business) => {
                 const latLng = getBusinessLatLng(business);
                 if (!latLng) return;
-                const marker = L.circleMarker(latLng, {
-                    radius: 8,
-                    color: '#0f3f56',
-                    weight: 2,
-                    fillColor: '#ff6b35',
-                    fillOpacity: 0.95
-                }).addTo(townMapMarkers);
+                const marker = L.marker(latLng).addTo(townMapMarkers);
                 marker.bindPopup(`<strong>${business.name}</strong><br>${business.address}`);
+                townMapBusinessMarkers[business.id] = marker;
                 bounds.push(latLng);
             });
 
             if (bounds.length > 0) {
-                townMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 3 });
-            } else {
-                townMap.fitBounds(MAP_BOUNDS, { padding: [18, 18] });
+                townMap.fitBounds(bounds, { padding: [32, 32], maxZoom: 14 });
             }
             setTimeout(() => {
                 if (townMap) townMap.invalidateSize();
+            }, 120);
+        }
+
+        function focusMapBusiness(business) {
+            const latLng = getBusinessLatLng(business);
+            if (!townMap || !latLng) return;
+            townMap.setView(latLng, 15, { animate: true });
+            const marker = townMapBusinessMarkers[business.id];
+            if (marker) marker.openPopup();
+        }
+
+        function searchMapBusiness() {
+            const input = document.getElementById('mapSearchInput');
+            if (!input) return;
+            const query = input.value.trim().toLowerCase();
+            if (!query) {
+                setMapSearchMessage('Type a business name to search the map.');
+                return;
+            }
+
+            const match = allBusinesses.find((business) => business.name.toLowerCase() === query)
+                || allBusinesses.find((business) => business.name.toLowerCase().includes(query));
+            if (!match) {
+                setMapSearchMessage('No business match found.');
+                return;
+            }
+
+            switchTab('map');
+            setTimeout(() => {
+                renderTownMapBusinesses(allBusinesses);
+                focusMapBusiness(match);
+                setMapSearchMessage(`Showing ${match.name}.`);
             }, 120);
         }
 
@@ -2358,10 +2449,7 @@
             switchTab('map');
             setTimeout(() => {
                 renderTownMapBusinesses(allBusinesses);
-                const latLng = getBusinessLatLng(business);
-                if (townMap && latLng) {
-                    townMap.setView(latLng, 3);
-                }
+                if (business) focusMapBusiness(business);
             }, 120);
         }
 
@@ -2427,6 +2515,7 @@
                 document.getElementById('currentUser').textContent = username;
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('appContainer').classList.add('active');
+                populateMapSearchOptions();
                 
                 // Show browse section by default
                 switchTab('browse');
@@ -2773,6 +2862,7 @@
                 applyCurrentFilter();
             } else if (section === 'map') {
                 renderTownMapBusinesses(allBusinesses);
+                setMapSearchMessage('Search a business name to jump directly on the map.');
                 setTimeout(() => {
                     if (townMap) townMap.invalidateSize();
                 }, 120);
@@ -3013,6 +3103,7 @@
         // Initialize on page load
         window.addEventListener('load', () => {
             updateTopControlLabels();
+            populateMapSearchOptions();
             initScrollAnimations();
             document.addEventListener('click', (event) => {
                 if (!event.target.closest('.dropdown-wrap')) {
