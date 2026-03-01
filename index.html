@@ -634,19 +634,20 @@
 
         /* Navigation Taskbar */
         .nav-taskbar {
-            background: white;
-            border-radius: 15px;
-            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
             margin-bottom: 1rem;
             box-shadow: 0 5px 20px var(--shadow);
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
             align-items: center;
             position: sticky;
-            top: 0.75rem;
+            top: 0.5rem;
             z-index: 30;
+            overflow-x: auto;
             opacity: 0;
             transform: translateY(-20px);
             transition: all 0.5s ease-out;
@@ -660,18 +661,19 @@
         .nav-tab-btn {
             background: transparent;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.85rem 1.1rem;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--midnight);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 0.5rem;
             position: relative;
+            white-space: nowrap;
         }
 
         .nav-tab-btn:hover {
@@ -701,6 +703,8 @@
 
         .nav-icon-small {
             font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
         }
 
         /* Remove old nav-grid styles */
@@ -1266,6 +1270,7 @@
         body.dark-mode .top-action-row,
         body.dark-mode .filter-controls,
         body.dark-mode .modal-content,
+        body.dark-mode .disclaimer-content,
         body.dark-mode .review-item,
         body.dark-mode .captcha-container,
         body.dark-mode .dropdown-menu,
@@ -1297,6 +1302,19 @@
         body.dark-mode .btn-secondary:hover {
             background: #1a3d62;
             color: var(--text-primary);
+        }
+
+        body.dark-mode .disclaimer-title {
+            color: #9fc8ff;
+        }
+
+        body.dark-mode .disclaimer-highlight {
+            background: #2a394e;
+            border-left-color: #f59e0b;
+        }
+
+        body.dark-mode .disclaimer-highlight strong {
+            color: #ffd37a;
         }
 
         body.dark-mode .section-title,
@@ -1451,16 +1469,20 @@
 
             <div id="navigationTaskbar" class="nav-taskbar">
                 <button type="button" class="nav-tab-btn active" data-section="browse" onclick="switchTab('browse')">
-                    <span class="nav-icon-small">Explore</span>
+                    <span class="nav-icon-small">🏪</span>
+                    <span>Explore</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="favorites" onclick="switchTab('favorites')">
-                    <span class="nav-icon-small">Favorites</span>
+                    <span class="nav-icon-small">💙</span>
+                    <span>Favorites</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="deals" onclick="switchTab('deals')">
-                    <span class="nav-icon-small">Deals</span>
+                    <span class="nav-icon-small">💰</span>
+                    <span>Deals</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="recommendations" onclick="switchTab('recommendations')">
-                    <span class="nav-icon-small">For You</span>
+                    <span class="nav-icon-small">🎯</span>
+                    <span>For You</span>
                 </button>
             </div>
 
@@ -1864,6 +1886,8 @@
         let currentFilter = 'all';
         let currentCategory = 'all';
         let currentSort = 'default';
+        const VALID_CATEGORIES = ['all', 'food', 'services', 'health', 'retail'];
+        const VALID_FILTERS = ['all', 'positive', 'negative', 'highly-rated'];
         let allBusinesses = [...businesses];
         let activityLog = [];
         const APP_STORAGE_KEY = 'townsquare-app-state-v1';
@@ -2156,19 +2180,9 @@
 
         // Category Filter
         function filterByCategory(category, buttonElement) {
-            currentCategory = String(category || 'all').toLowerCase();
+            const nextCategory = String(category || 'all').toLowerCase();
+            currentCategory = VALID_CATEGORIES.includes(nextCategory) ? nextCategory : 'all';
             currentFilter = 'all';
-            
-            document.querySelectorAll('.category-pill').forEach(pill => {
-                pill.classList.remove('active');
-            });
-            if (buttonElement) {
-                buttonElement.classList.add('active');
-            }
-
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            if (filterButtons[0]) filterButtons[0].classList.add('active');
             updateTopControlLabels();
             
             applyCurrentFilter();
@@ -2444,26 +2458,17 @@
 
         // Filter Functions
         function filterReviews(type, buttonElement) {
-            currentFilter = type;
+            const nextFilter = String(type || 'all').toLowerCase();
+            currentFilter = VALID_FILTERS.includes(nextFilter) ? nextFilter : 'all';
             currentCategory = 'all';
-            
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            if (buttonElement) {
-                buttonElement.classList.add('active');
-            }
-
-            const categoryButtons = document.querySelectorAll('.category-pill');
-            categoryButtons.forEach(pill => pill.classList.remove('active'));
-            if (categoryButtons[0]) categoryButtons[0].classList.add('active');
             updateTopControlLabels();
 
             applyCurrentFilter();
         }
 
         function getFilteredBusinesses() {
-            let filtered = [...allBusinesses];
+            const baseBusinesses = Array.isArray(allBusinesses) ? allBusinesses : [];
+            let filtered = [...baseBusinesses];
             if (currentCategory !== 'all') {
                 filtered = filtered.filter(b => {
                     const categoryText = String(b.category || '').toLowerCase();
@@ -2497,7 +2502,8 @@
                 filtered = filtered.filter(b => parseFloat(getAverageRating(b)) >= 4);
             }
 
-            const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+            const searchInput = document.getElementById('searchInput');
+            const searchQuery = (searchInput ? searchInput.value : '').trim().toLowerCase();
             if (searchQuery) {
                 filtered = filtered.filter(b => 
                     b.name.toLowerCase().includes(searchQuery) || 
@@ -2505,6 +2511,9 @@
                 );
             }
 
+            if (!filtered.length && !searchQuery && currentCategory === 'all' && currentFilter === 'all') {
+                return baseBusinesses;
+            }
             return filtered;
         }
 
@@ -2521,8 +2530,16 @@
         }
 
         function applyCurrentFilter() {
-            const filtered = applyCurrentSort(getFilteredBusinesses());
-            renderBusinesses(filtered, 'businessGrid');
+            try {
+                const filtered = applyCurrentSort(getFilteredBusinesses());
+                renderBusinesses(filtered, 'businessGrid');
+            } catch (error) {
+                console.error('Filter render failed:', error);
+                currentCategory = 'all';
+                currentFilter = 'all';
+                updateTopControlLabels();
+                renderBusinesses(Array.isArray(allBusinesses) ? allBusinesses : [], 'businessGrid');
+            }
         }
 
         function showSection(section) {
