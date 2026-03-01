@@ -1661,7 +1661,7 @@
                 <div class="map-panel" style="position: static;">
                     <div class="map-title">Businesses on Map</div>
                     <p style="margin: 0 0.25rem 0.75rem; color: var(--text-secondary); font-size: 0.9rem;">
-                        Simulated locations for FBLA Coding & Programming demonstration.
+                        Fictional, not-to-scale town map for FBLA Coding & Programming demonstration.
                     </p>
                     <div id="townMap" class="business-map" style="height: 560px;"></div>
                 </div>
@@ -1966,17 +1966,18 @@
         let allBusinesses = [...businesses];
         let activityLog = [];
         const APP_STORAGE_KEY = 'townsquare-app-state-v1';
+        const MAP_BOUNDS = [[0, 0], [100, 100]];
         const MAP_COORDS = {
-            1: [33.7603, -84.3880],
-            2: [33.7726, -84.3654],
-            3: [33.7800, -84.3684],
-            4: [33.7898, -84.3523],
-            5: [33.7850, -84.3876],
-            6: [33.7567, -84.3897],
-            7: [33.7608, -84.3572],
-            8: [33.7758, -84.3834],
-            9: [33.7477, -84.3696],
-            10: [33.7874, -84.3831]
+            1: [18, 24],
+            2: [31, 72],
+            3: [44, 61],
+            4: [67, 83],
+            5: [76, 54],
+            6: [22, 48],
+            7: [58, 38],
+            8: [73, 21],
+            9: [40, 18],
+            10: [52, 67]
         };
         let townMap = null;
         let townMapMarkers = null;
@@ -2280,11 +2281,45 @@
                 return;
             }
 
-            townMap = L.map('townMap', { zoomControl: true }).setView([33.7490, -84.3880], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
+            townMap = L.map('townMap', {
+                crs: L.CRS.Simple,
+                zoomControl: true,
+                attributionControl: false,
+                minZoom: 1,
+                maxZoom: 4
+            });
+
+            L.rectangle(MAP_BOUNDS, {
+                color: '#24526b',
+                weight: 2,
+                fillColor: '#e9f3f7',
+                fillOpacity: 1
             }).addTo(townMap);
+
+            for (let i = 10; i < 100; i += 10) {
+                L.polyline([[i, 0], [i, 100]], {
+                    color: '#bdd3df',
+                    weight: 1,
+                    opacity: 0.8,
+                    dashArray: '4 6'
+                }).addTo(townMap);
+                L.polyline([[0, i], [100, i]], {
+                    color: '#bdd3df',
+                    weight: 1,
+                    opacity: 0.8,
+                    dashArray: '4 6'
+                }).addTo(townMap);
+            }
+
+            L.marker([84, 12], { opacity: 0.95 }).addTo(townMap)
+                .bindTooltip('North District', { permanent: true, direction: 'right', className: 'map-district-label' });
+            L.marker([18, 86], { opacity: 0.95 }).addTo(townMap)
+                .bindTooltip('Riverwalk Zone', { permanent: true, direction: 'left', className: 'map-district-label' });
+            L.marker([52, 50], { opacity: 0.95 }).addTo(townMap)
+                .bindTooltip('Central Market', { permanent: true, direction: 'center', className: 'map-district-label' });
+
+            townMap.fitBounds(MAP_BOUNDS, { padding: [18, 18] });
+            townMap.setMaxBounds([[-8, -8], [108, 108]]);
             townMapMarkers = L.layerGroup().addTo(townMap);
         }
 
@@ -2297,13 +2332,21 @@
             businessList.forEach((business) => {
                 const latLng = getBusinessLatLng(business);
                 if (!latLng) return;
-                const marker = L.marker(latLng).addTo(townMapMarkers);
+                const marker = L.circleMarker(latLng, {
+                    radius: 8,
+                    color: '#0f3f56',
+                    weight: 2,
+                    fillColor: '#ff6b35',
+                    fillOpacity: 0.95
+                }).addTo(townMapMarkers);
                 marker.bindPopup(`<strong>${business.name}</strong><br>${business.address}`);
                 bounds.push(latLng);
             });
 
             if (bounds.length > 0) {
-                townMap.fitBounds(bounds, { padding: [30, 30] });
+                townMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 3 });
+            } else {
+                townMap.fitBounds(MAP_BOUNDS, { padding: [18, 18] });
             }
             setTimeout(() => {
                 if (townMap) townMap.invalidateSize();
@@ -2317,7 +2360,7 @@
                 renderTownMapBusinesses(allBusinesses);
                 const latLng = getBusinessLatLng(business);
                 if (townMap && latLng) {
-                    townMap.setView(latLng, 15);
+                    townMap.setView(latLng, 3);
                 }
             }, 120);
         }
@@ -2980,8 +3023,4 @@
     </script>
 </body>
 </html>
-
-
-
-
 
