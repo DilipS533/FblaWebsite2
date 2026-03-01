@@ -2020,6 +2020,24 @@
                             <li>App will auto-fallback to local mode if keys are missing</li>
                         </ul>
                     </article>
+                    <article class="panel-card">
+                        <h4>Supabase Live Sync Controls</h4>
+                        <div class="input-group">
+                            <label for="supabaseUrlInput">Project URL</label>
+                            <input type="text" id="supabaseUrlInput" placeholder="https://your-project-id.supabase.co">
+                        </div>
+                        <div class="input-group">
+                            <label for="supabaseAnonKeyInput">Anon Key</label>
+                            <input type="password" id="supabaseAnonKeyInput" placeholder="eyJ...">
+                        </div>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="saveSupabaseConfig()">Save & Connect</button>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="pullFromSupabase()">Pull Remote</button>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="pushToSupabase()">Push Local</button>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="clearSupabaseConfig()">Clear Config</button>
+                        </div>
+                        <p id="supabaseStatus" class="admin-meta" style="margin-top:0.7rem;">Supabase status: local mode.</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -2360,8 +2378,8 @@
         let supabaseClient = null;
         let remotePersistenceEnabled = false;
         let saveStateTimer = null;
-        const SUPABASE_URL = window.TOWNSQUARE_SUPABASE_URL || localStorage.getItem('townsquare-supabase-url') || '';
-        const SUPABASE_ANON_KEY = window.TOWNSQUARE_SUPABASE_ANON_KEY || localStorage.getItem('townsquare-supabase-anon-key') || '';
+        let SUPABASE_URL = window.TOWNSQUARE_SUPABASE_URL || localStorage.getItem('townsquare-supabase-url') || '';
+        let SUPABASE_ANON_KEY = window.TOWNSQUARE_SUPABASE_ANON_KEY || localStorage.getItem('townsquare-supabase-anon-key') || '';
 
         function cloneData(data) {
             return JSON.parse(JSON.stringify(data));
@@ -2391,17 +2409,38 @@
             }
         }
 
-        function initSupabaseClient() {
+        function setSupabaseStatus(message) {
+            const el = document.getElementById('supabaseStatus');
+            if (el) el.textContent = message;
+        }
+
+        function refreshSupabaseConfigUI() {
+            const urlInput = document.getElementById('supabaseUrlInput');
+            const keyInput = document.getElementById('supabaseAnonKeyInput');
+            if (urlInput) urlInput.value = SUPABASE_URL || '';
+            if (keyInput) keyInput.value = SUPABASE_ANON_KEY || '';
+            setSupabaseStatus(remotePersistenceEnabled ? 'Supabase status: connected.' : 'Supabase status: local mode.');
+        }
+
+        function initSupabaseClient(urlOverride, keyOverride) {
+            if (typeof urlOverride === 'string') SUPABASE_URL = urlOverride.trim();
+            if (typeof keyOverride === 'string') SUPABASE_ANON_KEY = keyOverride.trim();
+
             if (!window.supabase || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
+                supabaseClient = null;
                 remotePersistenceEnabled = false;
+                refreshSupabaseConfigUI();
                 return;
             }
             try {
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 remotePersistenceEnabled = true;
+                refreshSupabaseConfigUI();
             } catch (error) {
                 console.error('Supabase init failed:', error);
+                supabaseClient = null;
                 remotePersistenceEnabled = false;
+                refreshSupabaseConfigUI();
             }
         }
 
@@ -2413,15 +2452,114 @@
             if (!remotePersistenceEnabled || !supabaseClient) return;
             try {
                 const payload = getSerializableState();
-                await supabaseClient
+                const { error } = await supabaseClient
                     .from('app_state')
                     .upsert({
                         state_key: 'global',
                         payload,
                         updated_at: new Date().toISOString()
                     }, { onConflict: 'state_key' });
+                if (error) throw error;
             } catch (error) {
                 console.error('Remote save failed:', error);
+            }
+        }
+
+        async function saveSupabaseConfig() {
+            const urlInput = document.getElementById('supabaseUrlInput');
+            const keyInput = document.getElementById('supabaseAnonKeyInput');
+            const nextUrl = urlInput ? urlInput.value.trim() : '';
+            const nextKey = keyInput ? keyInput.value.trim() : '';
+
+            if (!nextUrl || !nextKey) {
+                setSupabaseStatus('Supabase status: missing URL or anon key.');
+                return;
+            }
+
+            localStorage.setItem('townsquare-supabase-url', nextUrl);
+            localStorage.setItem('townsquare-supabase-anon-key', nextKey);
+            initSupabaseClient(nextUrl, nextKey);
+            if (!remotePersistenceEnabled) {
+                setSupabaseStatus('Supabase status: connection failed.');
+                return;
+            }
+
+            const ok = await pushToSupabase(false);
+            if (!ok) {
+                setSupabaseStatus('Supabase status: connected, but initial push failed.');
+                return;
+            }
+            setSupabaseStatus('Supabase status: connected and initial sync complete.');
+        }
+
+        function clearSupabaseConfig() {
+            SUPABASE_URL = '';
+            SUPABASE_ANON_KEY = '';
+            localStorage.removeItem('townsquare-supabase-url');
+            localStorage.removeItem('townsquare-supabase-anon-key');
+            supabaseClient = null;
+            remotePersistenceEnabled = false;
+            refreshSupabaseConfigUI();
+        }
+
+        async function pushToSupabase(showMessage = true) {
+            if (!remotePersistenceEnabled || !supabaseClient) {
+                if (showMessage) setSupabaseStatus('Supabase status: not connected.');
+                return false;
+            }
+            try {
+                const payload = getSerializableState();
+                const { error } = await supabaseClient
+                    .from('app_state')
+                    .upsert({
+                        state_key: 'global',
+                        payload,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'state_key' });
+                if (error) throw error;
+                if (showMessage) setSupabaseStatus('Supabase status: push successful.');
+                return true;
+            } catch (error) {
+                console.error('Push failed:', error);
+                if (showMessage) setSupabaseStatus('Supabase status: push failed.');
+                return false;
+            }
+        }
+
+        async function pullFromSupabase(showMessage = true) {
+            if (!remotePersistenceEnabled || !supabaseClient) {
+                if (showMessage) setSupabaseStatus('Supabase status: not connected.');
+                return false;
+            }
+            try {
+                const { data, error } = await supabaseClient
+                    .from('app_state')
+                    .select('payload')
+                    .eq('state_key', 'global')
+                    .maybeSingle();
+                if (error) throw error;
+                if (data && data.payload && data.payload.users && data.payload.allBusinesses) {
+                    users = data.payload.users;
+                    allBusinesses = data.payload.allBusinesses;
+                    activityLog = Array.isArray(data.payload.activityLog) ? data.payload.activityLog : [];
+                    normalizeUsersData();
+                    syncCanonicalAddresses();
+                    saveAppState();
+                    if (currentUser && users[currentUser]) {
+                        refreshCurrentView();
+                        updateProfileStats();
+                        updateBadges();
+                        updateActivityFeed();
+                    }
+                    if (showMessage) setSupabaseStatus('Supabase status: pull successful.');
+                    return true;
+                }
+                if (showMessage) setSupabaseStatus('Supabase status: no remote state found.');
+                return false;
+            } catch (error) {
+                console.error('Pull failed:', error);
+                if (showMessage) setSupabaseStatus('Supabase status: pull failed.');
+                return false;
             }
         }
 
@@ -2474,28 +2612,7 @@
         async function hydrateFromRemoteState() {
             if (!remotePersistenceEnabled || !supabaseClient) return;
             try {
-                const { data, error } = await supabaseClient
-                    .from('app_state')
-                    .select('payload')
-                    .eq('state_key', 'global')
-                    .maybeSingle();
-                if (error) {
-                    console.error('Remote load failed:', error);
-                    return;
-                }
-                if (data && data.payload && data.payload.users && data.payload.allBusinesses) {
-                    users = data.payload.users;
-                    allBusinesses = data.payload.allBusinesses;
-                    activityLog = Array.isArray(data.payload.activityLog) ? data.payload.activityLog : [];
-                    normalizeUsersData();
-                    syncCanonicalAddresses();
-                    if (currentUser && users[currentUser]) {
-                        refreshCurrentView();
-                        updateProfileStats();
-                        updateBadges();
-                        updateActivityFeed();
-                    }
-                }
+                await pullFromSupabase(false);
             } catch (error) {
                 console.error('Remote hydrate failed:', error);
             }
@@ -3808,6 +3925,7 @@
             updateTopControlLabels();
             populateMapSearchOptions();
             populateCompareOptions();
+            refreshSupabaseConfigUI();
             initScrollAnimations();
             initAccessibilityShortcuts();
             hydrateFromRemoteState();
