@@ -1483,6 +1483,159 @@
             }
         }
 
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            background: #ffffff;
+            color: #111827;
+            padding: 0.65rem 1rem;
+            border-radius: 0 0 8px 8px;
+            z-index: 20000;
+            font-weight: 700;
+        }
+
+        .skip-link:focus {
+            left: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .panel-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 78, 100, 0.14);
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 6px 18px var(--shadow);
+        }
+
+        .panel-card h4 {
+            margin-bottom: 0.4rem;
+            color: var(--text-primary);
+        }
+
+        .panel-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .compare-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .compare-controls select {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            border: 1px solid rgba(0, 78, 100, 0.14);
+            padding: 1rem;
+            min-height: 280px;
+        }
+
+        .chart-title {
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+        }
+
+        .admin-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.7rem;
+            border-radius: 10px;
+            background: rgba(0, 78, 100, 0.05);
+            margin-bottom: 0.6rem;
+        }
+
+        .admin-meta {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        .admin-pill {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .judge-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 11000;
+            background: rgba(15, 23, 42, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .judge-modal.active {
+            display: flex;
+        }
+
+        .judge-content {
+            width: min(640px, 95%);
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.3rem;
+            border: 1px solid rgba(0, 78, 100, 0.15);
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+        }
+
+        .judge-step {
+            color: var(--text-secondary);
+            margin: 0.6rem 0 1rem;
+        }
+
+        .judge-actions {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: flex-end;
+        }
+
+        .docs-list {
+            line-height: 1.9;
+            color: var(--text-primary);
+            margin: 0;
+            padding-left: 1.15rem;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -1491,6 +1644,7 @@
     <!-- The below code represents the disclaimer that informs users of true purpose of website -->
 </head>
 <body>
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
     <!-- FBLA Disclaimer Overlay -->
     <div id="disclaimerOverlay" class="disclaimer-overlay">
         <div class="disclaimer-content">
@@ -1520,7 +1674,7 @@
     <div class="bg-decoration circle-1"></div>
     <div class="bg-decoration circle-2"></div>
 
-    <div class="container">
+    <div class="container" id="mainContent" tabindex="-1">
         <!-- Hero Section -->
         <div class="hero-section">
             <div class="hero-content">
@@ -1568,6 +1722,7 @@
             <div class="user-bar">
                 <div class="user-info">Welcome, <span id="currentUser">User</span>!</div>
                 <div class="user-controls">
+                    <button type="button" class="btn btn-secondary" onclick="startJudgeMode()">Demo Tour</button>
                     <button type="button" class="dark-mode-toggle" onclick="toggleDarkMode()">
                         <span id="darkModeIcon">🌙</span>
                         <span id="darkModeText">Dark Mode</span>
@@ -1598,6 +1753,22 @@
                 <button type="button" class="nav-tab-btn" data-section="recommendations" onclick="switchTab('recommendations')">
                     <span class="nav-icon-small">🎯</span>
                     <span>For You</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-section="compare" onclick="switchTab('compare')">
+                    <span class="nav-icon-small">⚖️</span>
+                    <span>Compare</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-section="analytics" onclick="switchTab('analytics')">
+                    <span class="nav-icon-small">📊</span>
+                    <span>Analytics</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-section="admin" onclick="switchTab('admin')">
+                    <span class="nav-icon-small">🛡️</span>
+                    <span>Admin</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-section="docs" onclick="switchTab('docs')">
+                    <span class="nav-icon-small">🧩</span>
+                    <span>Tech Docs</span>
                 </button>
             </div>
 
@@ -1707,7 +1878,7 @@
 
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search by name or category..." oninput="searchBusinesses()">
+                    <input type="text" class="search-input" id="searchInput" aria-label="Search businesses by name or category" placeholder="Search by name or category..." oninput="searchBusinesses()">
                 </div>
                 <div id="businessGrid" class="business-grid"></div>
             </div>
@@ -1728,6 +1899,7 @@
                             id="mapSearchInput"
                             class="map-search-input"
                             list="mapBusinessOptions"
+                            aria-label="Search businesses on map"
                             placeholder="Search a business on the map..."
                             onkeydown="if (event.key === 'Enter') searchMapBusiness();"
                         >
@@ -1761,6 +1933,94 @@
                     <h2 class="section-title">Picked for You</h2>
                 </div>
                 <div id="recommendationsGrid" class="business-grid"></div>
+            </div>
+
+            <div id="compareSection" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Compare Businesses</h2>
+                </div>
+                <p class="section-subtitle">Compare ratings, sentiment, category, and map distance side-by-side.</p>
+                <div class="panel-card">
+                    <div class="compare-controls">
+                        <select id="compareSelectA" aria-label="Select first business"></select>
+                        <select id="compareSelectB" aria-label="Select second business"></select>
+                        <button type="button" class="btn btn-secondary" onclick="compareBusinesses()">Compare</button>
+                    </div>
+                    <div id="compareResult" class="panel-grid"></div>
+                </div>
+            </div>
+
+            <div id="analyticsSection" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Community Analytics</h2>
+                </div>
+                <p class="section-subtitle">Live metrics generated from reviews, categories, and engagement.</p>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">Businesses by Category</div>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Average Rating by Business</div>
+                        <canvas id="ratingChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Review Sentiment</div>
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adminSection" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Admin Moderation</h2>
+                </div>
+                <p class="section-subtitle">Review moderation queue and featured business controls.</p>
+                <div id="adminContent" class="panel-card"></div>
+            </div>
+
+            <div id="docsSection" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Technical Documentation</h2>
+                </div>
+                <div class="panel-grid">
+                    <article class="panel-card">
+                        <h4>Architecture</h4>
+                        <ul class="docs-list">
+                            <li>Frontend: single-page app using HTML/CSS/JavaScript</li>
+                            <li>Map stack: Leaflet + OpenStreetMap tiles + custom overlays</li>
+                            <li>Charts: Chart.js for analytics visualization</li>
+                            <li>Persistence: localStorage fallback and optional Supabase sync</li>
+                        </ul>
+                    </article>
+                    <article class="panel-card">
+                        <h4>Data Model</h4>
+                        <ul class="docs-list">
+                            <li>`users`: auth, favorites, interaction history, role flags</li>
+                            <li>`businesses`: listing metadata, deals, and reviews</li>
+                            <li>`reviews`: user, rating, sentiment signals, dates</li>
+                            <li>`activityLog`: chronological user events</li>
+                        </ul>
+                    </article>
+                    <article class="panel-card">
+                        <h4>Security and Quality</h4>
+                        <ul class="docs-list">
+                            <li>Client-side validation for auth and review submission</li>
+                            <li>Moderation queue for low-rated/high-dislike reviews</li>
+                            <li>Accessibility supports keyboard and ARIA labels</li>
+                            <li>Exported JSON reports for judge verification</li>
+                        </ul>
+                    </article>
+                    <article class="panel-card">
+                        <h4>Supabase Setup</h4>
+                        <ul class="docs-list">
+                            <li>Create table `app_state(state_key text primary key, payload jsonb, updated_at timestamp)`</li>
+                            <li>Set `window.TOWNSQUARE_SUPABASE_URL` and `window.TOWNSQUARE_SUPABASE_ANON_KEY`</li>
+                            <li>Enable RLS policy for your authenticated demo workflow</li>
+                            <li>App will auto-fallback to local mode if keys are missing</li>
+                        </ul>
+                    </article>
+                </div>
             </div>
         </div>
     </div>
@@ -1855,6 +2115,19 @@
         </div>
     </div>
 
+    <div id="judgeModeModal" class="judge-modal" aria-live="polite">
+        <div class="judge-content">
+            <h3 class="modal-header">Judge Mode Walkthrough</h3>
+            <p id="judgeModeStepText" class="judge-step">Press start to begin the guided demo.</p>
+            <div class="judge-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeJudgeMode()">Close</button>
+                <button type="button" class="btn btn-primary" id="judgeModeNextBtn" onclick="nextJudgeStep()">Start</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -2023,6 +2296,13 @@
                 favorites: [1, 5],
                 reviews: [],
                 reviewInteractions: {}
+            },
+            admin: {
+                password: "admin123",
+                favorites: [],
+                reviews: [],
+                reviewInteractions: {},
+                isAdmin: true
             }
         };
 
@@ -2073,21 +2353,88 @@
         let townMap = null;
         let townMapMarkers = null;
         let townMapBusinessMarkers = {};
+        let categoryChartInstance = null;
+        let ratingChartInstance = null;
+        let sentimentChartInstance = null;
+        let judgeStepIndex = -1;
+        let supabaseClient = null;
+        let remotePersistenceEnabled = false;
+        let saveStateTimer = null;
+        const SUPABASE_URL = window.TOWNSQUARE_SUPABASE_URL || localStorage.getItem('townsquare-supabase-url') || '';
+        const SUPABASE_ANON_KEY = window.TOWNSQUARE_SUPABASE_ANON_KEY || localStorage.getItem('townsquare-supabase-anon-key') || '';
 
         function cloneData(data) {
             return JSON.parse(JSON.stringify(data));
         }
 
+        function normalizeUsersData() {
+            Object.keys(users).forEach((username) => {
+                const record = users[username] || {};
+                if (!Array.isArray(record.favorites)) record.favorites = [];
+                if (!Array.isArray(record.reviews)) record.reviews = [];
+                if (!record.reviewInteractions || typeof record.reviewInteractions !== 'object') {
+                    record.reviewInteractions = {};
+                }
+                if (typeof record.password !== 'string') record.password = '';
+                users[username] = record;
+            });
+            if (!users.admin) {
+                users.admin = {
+                    password: 'admin123',
+                    favorites: [],
+                    reviews: [],
+                    reviewInteractions: {},
+                    isAdmin: true
+                };
+            } else {
+                users.admin.isAdmin = true;
+            }
+        }
+
+        function initSupabaseClient() {
+            if (!window.supabase || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
+                remotePersistenceEnabled = false;
+                return;
+            }
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                remotePersistenceEnabled = true;
+            } catch (error) {
+                console.error('Supabase init failed:', error);
+                remotePersistenceEnabled = false;
+            }
+        }
+
+        function getSerializableState() {
+            return { users, allBusinesses, activityLog };
+        }
+
+        async function saveAppStateRemote() {
+            if (!remotePersistenceEnabled || !supabaseClient) return;
+            try {
+                const payload = getSerializableState();
+                await supabaseClient
+                    .from('app_state')
+                    .upsert({
+                        state_key: 'global',
+                        payload,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'state_key' });
+            } catch (error) {
+                console.error('Remote save failed:', error);
+            }
+        }
+
         function saveAppState() {
             try {
-                localStorage.setItem(APP_STORAGE_KEY, JSON.stringify({
-                    users,
-                    allBusinesses,
-                    activityLog
-                }));
+                localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(getSerializableState()));
             } catch (error) {
                 console.error('Failed to save app state:', error);
             }
+            if (saveStateTimer) clearTimeout(saveStateTimer);
+            saveStateTimer = setTimeout(() => {
+                saveAppStateRemote();
+            }, 450);
         }
 
         function loadAppState() {
@@ -2101,6 +2448,7 @@
                     allBusinesses = parsed.allBusinesses;
                     activityLog = Array.isArray(parsed.activityLog) ? parsed.activityLog : [];
                 }
+                normalizeUsersData();
             } catch (error) {
                 console.error('Failed to load app state:', error);
                 users = cloneData({
@@ -2109,10 +2457,47 @@
                         favorites: [1, 5],
                         reviews: [],
                         reviewInteractions: {}
+                    },
+                    admin: {
+                        password: "admin123",
+                        favorites: [],
+                        reviews: [],
+                        reviewInteractions: {},
+                        isAdmin: true
                     }
                 });
                 allBusinesses = cloneData(businesses);
                 activityLog = [];
+            }
+        }
+
+        async function hydrateFromRemoteState() {
+            if (!remotePersistenceEnabled || !supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('app_state')
+                    .select('payload')
+                    .eq('state_key', 'global')
+                    .maybeSingle();
+                if (error) {
+                    console.error('Remote load failed:', error);
+                    return;
+                }
+                if (data && data.payload && data.payload.users && data.payload.allBusinesses) {
+                    users = data.payload.users;
+                    allBusinesses = data.payload.allBusinesses;
+                    activityLog = Array.isArray(data.payload.activityLog) ? data.payload.activityLog : [];
+                    normalizeUsersData();
+                    syncCanonicalAddresses();
+                    if (currentUser && users[currentUser]) {
+                        refreshCurrentView();
+                        updateProfileStats();
+                        updateBadges();
+                        updateActivityFeed();
+                    }
+                }
+            } catch (error) {
+                console.error('Remote hydrate failed:', error);
             }
         }
 
@@ -2130,6 +2515,7 @@
             });
         }
 
+        initSupabaseClient();
         loadAppState();
         syncCanonicalAddresses();
 
@@ -2492,6 +2878,250 @@
             }, 120);
         }
 
+        function isCurrentUserAdmin() {
+            if (!currentUser || !users[currentUser]) return false;
+            return currentUser === 'admin' || users[currentUser].isAdmin === true;
+        }
+
+        function getDistanceMiles(a, b) {
+            if (!a || !b) return 0;
+            const toRad = (deg) => (deg * Math.PI) / 180;
+            const earthRadiusMiles = 3958.8;
+            const dLat = toRad(b[0] - a[0]);
+            const dLon = toRad(b[1] - a[1]);
+            const lat1 = toRad(a[0]);
+            const lat2 = toRad(b[0]);
+            const h = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+            return earthRadiusMiles * c;
+        }
+
+        function populateCompareOptions() {
+            const selectA = document.getElementById('compareSelectA');
+            const selectB = document.getElementById('compareSelectB');
+            if (!selectA || !selectB) return;
+            const options = allBusinesses.map((b) => `<option value="${b.id}">${b.name}</option>`).join('');
+            selectA.innerHTML = `<option value="">Select business A</option>${options}`;
+            selectB.innerHTML = `<option value="">Select business B</option>${options}`;
+        }
+
+        function compareBusinesses() {
+            const selectA = document.getElementById('compareSelectA');
+            const selectB = document.getElementById('compareSelectB');
+            const result = document.getElementById('compareResult');
+            if (!selectA || !selectB || !result) return;
+
+            const businessA = allBusinesses.find((b) => b.id === Number(selectA.value));
+            const businessB = allBusinesses.find((b) => b.id === Number(selectB.value));
+            if (!businessA || !businessB || businessA.id === businessB.id) {
+                result.innerHTML = '<p style="color: var(--text-secondary);">Choose two different businesses to compare.</p>';
+                return;
+            }
+
+            const avgA = Number(getAverageRating(businessA)) || 0;
+            const avgB = Number(getAverageRating(businessB)) || 0;
+            const statsA = getReviewStats(businessA);
+            const statsB = getReviewStats(businessB);
+            const distance = getDistanceMiles(getBusinessLatLng(businessA), getBusinessLatLng(businessB));
+            const winner = avgA === avgB ? 'Tie' : (avgA > avgB ? businessA.name : businessB.name);
+
+            result.innerHTML = `
+                <article class="panel-card">
+                    <h4>${businessA.name}</h4>
+                    <p>Category: ${businessA.category}</p>
+                    <p>Rating: ${avgA.toFixed(1)} | Reviews: ${businessA.reviews.length}</p>
+                    <p>Sentiment: ${statsA.positive} positive / ${statsA.negative} negative</p>
+                    <p>Deal: ${businessA.deal}</p>
+                </article>
+                <article class="panel-card">
+                    <h4>${businessB.name}</h4>
+                    <p>Category: ${businessB.category}</p>
+                    <p>Rating: ${avgB.toFixed(1)} | Reviews: ${businessB.reviews.length}</p>
+                    <p>Sentiment: ${statsB.positive} positive / ${statsB.negative} negative</p>
+                    <p>Deal: ${businessB.deal}</p>
+                </article>
+                <article class="panel-card">
+                    <h4>Comparison Summary</h4>
+                    <p>Top rated: ${winner}</p>
+                    <p>Distance apart: ${distance.toFixed(2)} miles</p>
+                    <p>Recommendation: ${winner === 'Tie' ? 'Both are strong options.' : `Try ${winner} first based on community rating.`}</p>
+                </article>
+            `;
+        }
+
+        function getSentimentTotals() {
+            let positive = 0;
+            let neutral = 0;
+            let negative = 0;
+            allBusinesses.forEach((b) => {
+                b.reviews.forEach((r) => {
+                    if (r.rating >= 4) positive++;
+                    else if (r.rating <= 2) negative++;
+                    else neutral++;
+                });
+            });
+            return { positive, neutral, negative };
+        }
+
+        function destroyCharts() {
+            if (categoryChartInstance) categoryChartInstance.destroy();
+            if (ratingChartInstance) ratingChartInstance.destroy();
+            if (sentimentChartInstance) sentimentChartInstance.destroy();
+            categoryChartInstance = null;
+            ratingChartInstance = null;
+            sentimentChartInstance = null;
+        }
+
+        function renderAnalyticsCharts() {
+            if (typeof Chart === 'undefined') return;
+            const categoryCtx = document.getElementById('categoryChart');
+            const ratingCtx = document.getElementById('ratingChart');
+            const sentimentCtx = document.getElementById('sentimentChart');
+            if (!categoryCtx || !ratingCtx || !sentimentCtx) return;
+            destroyCharts();
+
+            const categoryCounts = {};
+            allBusinesses.forEach((b) => {
+                categoryCounts[b.category] = (categoryCounts[b.category] || 0) + 1;
+            });
+
+            categoryChartInstance = new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(categoryCounts),
+                    datasets: [{
+                        data: Object.values(categoryCounts),
+                        backgroundColor: ['#ff6b35', '#004e64', '#f7b32b', '#10b981']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            ratingChartInstance = new Chart(ratingCtx, {
+                type: 'bar',
+                data: {
+                    labels: allBusinesses.map((b) => b.name),
+                    datasets: [{
+                        label: 'Avg Rating',
+                        data: allBusinesses.map((b) => Number(getAverageRating(b)) || 0),
+                        backgroundColor: '#315c79'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    scales: { x: { min: 0, max: 5 } }
+                }
+            });
+
+            const sentiment = getSentimentTotals();
+            sentimentChartInstance = new Chart(sentimentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Positive', 'Neutral', 'Negative'],
+                    datasets: [{
+                        data: [sentiment.positive, sentiment.neutral, sentiment.negative],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        function getFlaggedReviews() {
+            const queue = [];
+            allBusinesses.forEach((business) => {
+                business.reviews.forEach((review, index) => {
+                    const flagged = review.rating <= 2 || review.dislikes >= 8;
+                    if (flagged) {
+                        queue.push({ business, review, reviewIndex: index });
+                    }
+                });
+            });
+            return queue;
+        }
+
+        function removeReviewAsAdmin(businessId, reviewIndex) {
+            if (!isCurrentUserAdmin()) return;
+            const business = allBusinesses.find((b) => b.id === businessId);
+            if (!business) return;
+            business.reviews.splice(reviewIndex, 1);
+            addActivity(`Admin removed a review from ${business.name}`);
+            saveAppState();
+            renderAdminPanel();
+            refreshCurrentView();
+        }
+
+        function renderAdminPanel() {
+            const container = document.getElementById('adminContent');
+            if (!container) return;
+            if (!isCurrentUserAdmin()) {
+                container.innerHTML = `
+                    <h4>Restricted Access</h4>
+                    <p>Admin panel is available only for privileged accounts.</p>
+                    <p class="admin-meta">Use demo admin account for judging: username <strong>admin</strong>, password <strong>admin123</strong>.</p>
+                `;
+                return;
+            }
+
+            const queue = getFlaggedReviews();
+            if (!queue.length) {
+                container.innerHTML = '<h4>Moderation Queue</h4><p>All clear. No reviews currently flagged.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <h4>Moderation Queue (${queue.length})</h4>
+                ${queue.map((item) => `
+                    <div class="admin-row">
+                        <div>
+                            <div><strong>${item.business.name}</strong> - ${item.review.user}</div>
+                            <div class="admin-meta">Rating: ${item.review.rating}/5 | Dislikes: ${item.review.dislikes} | "${item.review.text}"</div>
+                        </div>
+                        <span class="admin-pill">Flagged</span>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="removeReviewAsAdmin(${item.business.id}, ${item.reviewIndex})">Remove</button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        const judgeSteps = [
+            { text: 'Step 1: Explore tab. Use category and review filters to narrow businesses.', action: () => switchTab('browse') },
+            { text: 'Step 2: Open Map tab and search a business to jump directly to it.', action: () => switchTab('map') },
+            { text: 'Step 3: Open Compare tab and compare any two businesses side-by-side.', action: () => switchTab('compare') },
+            { text: 'Step 4: Open Analytics tab to show live charts and sentiment trends.', action: () => switchTab('analytics') },
+            { text: 'Step 5: Open Admin tab to show moderation queue and governance controls.', action: () => switchTab('admin') },
+            { text: 'Step 6: Export report from Help/Profile workflow to prove user activity tracking.', action: () => switchTab('favorites') }
+        ];
+
+        function startJudgeMode() {
+            judgeStepIndex = -1;
+            document.getElementById('judgeModeModal').classList.add('active');
+            document.getElementById('judgeModeNextBtn').textContent = 'Start';
+            document.getElementById('judgeModeStepText').textContent = 'This tour runs through the main judging checkpoints in under 90 seconds.';
+        }
+
+        function closeJudgeMode() {
+            document.getElementById('judgeModeModal').classList.remove('active');
+        }
+
+        function nextJudgeStep() {
+            judgeStepIndex += 1;
+            const stepText = document.getElementById('judgeModeStepText');
+            const nextBtn = document.getElementById('judgeModeNextBtn');
+            if (judgeStepIndex >= judgeSteps.length) {
+                stepText.textContent = 'Tour complete. You are ready to present the full workflow.';
+                nextBtn.textContent = 'Restart';
+                judgeStepIndex = -1;
+                return;
+            }
+            const step = judgeSteps[judgeStepIndex];
+            if (typeof step.action === 'function') step.action();
+            stepText.textContent = step.text;
+            nextBtn.textContent = judgeStepIndex === judgeSteps.length - 1 ? 'Finish' : 'Next';
+        }
+
         function updateTopControlLabels() {
             const categoryBtn = document.getElementById('categoryDropdownBtn');
             const reviewBtn = document.getElementById('reviewDropdownBtn');
@@ -2555,6 +3185,8 @@
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('appContainer').classList.add('active');
                 populateMapSearchOptions();
+                populateCompareOptions();
+                renderAdminPanel();
                 
                 // Show browse section by default
                 switchTab('browse');
@@ -2788,6 +3420,12 @@
                 applyCurrentFilter();
             } else if (activeSection.id === 'favoritesSection') {
                 showSection('favorites');
+            } else if (activeSection.id === 'compareSection') {
+                populateCompareOptions();
+            } else if (activeSection.id === 'analyticsSection') {
+                renderAnalyticsCharts();
+            } else if (activeSection.id === 'adminSection') {
+                renderAdminPanel();
             }
         }
 
@@ -2885,7 +3523,11 @@
                 'map': 'mapSection',
                 'favorites': 'favoritesSection',
                 'deals': 'dealsSection',
-                'recommendations': 'recommendationsSection'
+                'recommendations': 'recommendationsSection',
+                'compare': 'compareSection',
+                'analytics': 'analyticsSection',
+                'admin': 'adminSection',
+                'docs': 'docsSection'
             };
             
             document.getElementById(sectionMap[section]).classList.add('active');
@@ -2913,6 +3555,12 @@
             } else if (section === 'recommendations') {
                 const recommendations = getRecommendations();
                 renderBusinesses(recommendations, 'recommendationsGrid');
+            } else if (section === 'compare') {
+                populateCompareOptions();
+            } else if (section === 'analytics') {
+                renderAnalyticsCharts();
+            } else if (section === 'admin') {
+                renderAdminPanel();
             }
 
             // Trigger scroll animations for new content
@@ -3139,11 +3787,30 @@
             }, 100);
         }
 
+        function initAccessibilityShortcuts() {
+            document.addEventListener('keydown', (event) => {
+                if (event.key === '/' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    event.preventDefault();
+                    const search = document.getElementById('searchInput');
+                    if (search) search.focus();
+                }
+                if (event.key === 'Escape') {
+                    closeDropdowns();
+                    closeReviewModal();
+                    closeHelpModal();
+                    closeJudgeMode();
+                }
+            });
+        }
+
         // Initialize on page load
         window.addEventListener('load', () => {
             updateTopControlLabels();
             populateMapSearchOptions();
+            populateCompareOptions();
             initScrollAnimations();
+            initAccessibilityShortcuts();
+            hydrateFromRemoteState();
             document.addEventListener('click', (event) => {
                 if (!event.target.closest('.dropdown-wrap')) {
                     closeDropdowns();
