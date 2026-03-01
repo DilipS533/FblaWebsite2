@@ -2409,6 +2409,44 @@
             }
         }
 
+        function normalizeBusinessData() {
+            if (!Array.isArray(allBusinesses)) {
+                allBusinesses = cloneData(businesses);
+                return;
+            }
+            allBusinesses = allBusinesses.map((business) => {
+                const safe = business || {};
+                if (!Array.isArray(safe.reviews)) safe.reviews = [];
+                if (typeof safe.name !== 'string') safe.name = 'Unknown Business';
+                if (typeof safe.category !== 'string') safe.category = 'Services';
+                if (typeof safe.address !== 'string') safe.address = 'Address unavailable';
+                if (typeof safe.phone !== 'string') safe.phone = 'N/A';
+                if (typeof safe.deal !== 'string') safe.deal = 'No current deal';
+                return safe;
+            });
+        }
+
+        function getCurrentUserState() {
+            if (!currentUser) {
+                return { favorites: [], reviews: [], reviewInteractions: {} };
+            }
+            if (!users[currentUser] || typeof users[currentUser] !== 'object') {
+                users[currentUser] = {
+                    password: '',
+                    favorites: [],
+                    reviews: [],
+                    reviewInteractions: {}
+                };
+            }
+            const record = users[currentUser];
+            if (!Array.isArray(record.favorites)) record.favorites = [];
+            if (!Array.isArray(record.reviews)) record.reviews = [];
+            if (!record.reviewInteractions || typeof record.reviewInteractions !== 'object') {
+                record.reviewInteractions = {};
+            }
+            return record;
+        }
+
         function setSupabaseStatus(message) {
             const el = document.getElementById('supabaseStatus');
             if (el) el.textContent = message;
@@ -2543,6 +2581,7 @@
                     allBusinesses = data.payload.allBusinesses;
                     activityLog = Array.isArray(data.payload.activityLog) ? data.payload.activityLog : [];
                     normalizeUsersData();
+                    normalizeBusinessData();
                     syncCanonicalAddresses();
                     saveAppState();
                     if (currentUser && users[currentUser]) {
@@ -2587,6 +2626,7 @@
                     activityLog = Array.isArray(parsed.activityLog) ? parsed.activityLog : [];
                 }
                 normalizeUsersData();
+                normalizeBusinessData();
             } catch (error) {
                 console.error('Failed to load app state:', error);
                 users = cloneData({
@@ -2683,13 +2723,14 @@
 
         // Update Profile Stats
         function updateProfileStats() {
+            const userState = getCurrentUserState();
             const reviewCount = allBusinesses.reduce((count, b) => {
                 return count + b.reviews.filter(r => r.user === currentUser).length;
             }, 0);
             
-            const favoriteCount = users[currentUser].favorites.length;
+            const favoriteCount = userState.favorites.length;
             
-            const likesGiven = Object.keys(users[currentUser].reviewInteractions).length;
+            const likesGiven = Object.keys(userState.reviewInteractions).length;
             
             const badgeCount = getBadgeCount();
             
@@ -2701,6 +2742,7 @@
 
         // Badge System
         function getBadgeCount() {
+            const userState = getCurrentUserState();
             let count = 0;
             const reviewCount = allBusinesses.reduce((c, b) => {
                 return c + b.reviews.filter(r => r.user === currentUser).length;
@@ -2708,13 +2750,14 @@
             
             if (reviewCount >= 1) count++;
             if (reviewCount >= 5) count++;
-            if (users[currentUser].favorites.length >= 3) count++;
-            if (Object.keys(users[currentUser].reviewInteractions).length >= 10) count++;
+            if (userState.favorites.length >= 3) count++;
+            if (Object.keys(userState.reviewInteractions).length >= 10) count++;
             
             return count;
         }
 
         function updateBadges() {
+            const userState = getCurrentUserState();
             const reviewCount = allBusinesses.reduce((c, b) => {
                 return c + b.reviews.filter(r => r.user === currentUser).length;
             }, 0);
@@ -2730,12 +2773,12 @@
             }
             
             // Explorer Badge (3+ favorites)
-            if (users[currentUser].favorites.length >= 3) {
+            if (userState.favorites.length >= 3) {
                 document.getElementById('badge-explorer').classList.remove('locked');
             }
             
             // Supporter Badge (10+ likes given)
-            if (Object.keys(users[currentUser].reviewInteractions).length >= 10) {
+            if (Object.keys(userState.reviewInteractions).length >= 10) {
                 document.getElementById('badge-supporter').classList.remove('locked');
             }
         }
@@ -2793,7 +2836,7 @@
             });
             
             const favoriteBusinesses = allBusinesses
-                .filter(b => users[currentUser].favorites.includes(b.id))
+                .filter(b => getCurrentUserState().favorites.includes(b.id))
                 .map(b => ({ name: b.name, category: b.category }));
             
             const report = {
@@ -2802,7 +2845,7 @@
                 statistics: {
                     totalReviews: userReviews.length,
                     totalFavorites: favoriteBusinesses.length,
-                    totalLikesGiven: Object.keys(users[currentUser].reviewInteractions).length,
+                    totalLikesGiven: Object.keys(getCurrentUserState().reviewInteractions).length,
                     badgesEarned: getBadgeCount()
                 },
                 reviews: userReviews,
@@ -3360,15 +3403,17 @@
 
         // Business Functions
         function getAverageRating(business) {
-            if (business.reviews.length === 0) return 0;
-            const sum = business.reviews.reduce((acc, r) => acc + r.rating, 0);
-            return (sum / business.reviews.length).toFixed(1);
+            const reviews = Array.isArray(business?.reviews) ? business.reviews : [];
+            if (reviews.length === 0) return 0;
+            const sum = reviews.reduce((acc, r) => acc + (Number(r.rating) || 0), 0);
+            return (sum / reviews.length).toFixed(1);
         }
 
         function getReviewStats(business) {
+            const reviews = Array.isArray(business?.reviews) ? business.reviews : [];
             let positive = 0;
             let negative = 0;
-            business.reviews.forEach(r => {
+            reviews.forEach(r => {
                 if (r.rating >= 4) positive++;
                 else if (r.rating <= 2) negative++;
             });
@@ -3381,9 +3426,11 @@
 
         function renderBusinessCard(business) {
             const avg = getAverageRating(business);
-            const isFavorite = users[currentUser].favorites.includes(business.id);
+            const userState = getCurrentUserState();
+            const isFavorite = userState.favorites.includes(business.id);
             const stars = avg > 0 ? '⭐'.repeat(Math.round(avg)) : 'No ratings yet';
             const stats = getReviewStats(business);
+            const reviews = Array.isArray(business.reviews) ? business.reviews : [];
             const businessImageMap = {
                 1: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=80',
                 2: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
@@ -3408,8 +3455,8 @@
                 headerClass = 'cat-retail';
             }
             const businessImage = businessImageMap[business.id] || 'https://picsum.photos/id/1043/1200/800';
-            const recentReviews = business.reviews.slice(-2);
-            const reviewOffset = business.reviews.length - recentReviews.length;
+            const recentReviews = reviews.slice(-2);
+            const reviewOffset = reviews.length - recentReviews.length;
 
             return `
                 <div class="business-card">
@@ -3428,13 +3475,13 @@
                             <div class="info-row">📞 ${business.phone}</div>
                         </div>
                         <div class="deal-badge">💰 ${business.deal}</div>
-                        ${business.reviews.length > 0 ? `
+                        ${reviews.length > 0 ? `
                             <div style="margin-top: 1rem;">
                                 <strong style="color: var(--text-primary);">Recent Reviews:</strong>
                                 ${recentReviews.map((r, idx) => {
                                     const reviewIndex = reviewOffset + idx;
                                     const reviewId = getReviewId(business.id, reviewIndex);
-                                    const userInteraction = users[currentUser].reviewInteractions[reviewId];
+                                    const userInteraction = userState.reviewInteractions[reviewId];
                                     return `
                                     <div class="review-item">
                                         <div class="review-header">
@@ -3474,6 +3521,7 @@
 
         function renderBusinesses(businessList, containerId) {
             const container = document.getElementById(containerId);
+            if (!container) return;
             if (businessList.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -3484,25 +3532,38 @@
                 `;
                 return;
             }
-            container.innerHTML = businessList.map(renderBusinessCard).join('');
+            try {
+                container.innerHTML = businessList.map(renderBusinessCard).join('');
+            } catch (error) {
+                console.error('Business render failed:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">!</div>
+                        <h3>Display refresh needed</h3>
+                        <p>Data is safe. Try again in a second.</p>
+                    </div>
+                `;
+            }
         }
 
         // Review Interactions
         function likeReview(businessId, reviewIndex) {
             const business = allBusinesses.find(b => b.id === businessId);
+            if (!business || !Array.isArray(business.reviews) || !business.reviews[reviewIndex]) return;
             const review = business.reviews[reviewIndex];
             const reviewId = getReviewId(businessId, reviewIndex);
-            const currentInteraction = users[currentUser].reviewInteractions[reviewId];
+            const userState = getCurrentUserState();
+            const currentInteraction = userState.reviewInteractions[reviewId];
 
             if (currentInteraction === 'like') {
                 review.likes--;
-                delete users[currentUser].reviewInteractions[reviewId];
+                delete userState.reviewInteractions[reviewId];
             } else {
                 if (currentInteraction === 'dislike') {
                     review.dislikes--;
                 }
                 review.likes++;
-                users[currentUser].reviewInteractions[reviewId] = 'like';
+                userState.reviewInteractions[reviewId] = 'like';
             }
 
             saveAppState();
@@ -3511,19 +3572,21 @@
 
         function dislikeReview(businessId, reviewIndex) {
             const business = allBusinesses.find(b => b.id === businessId);
+            if (!business || !Array.isArray(business.reviews) || !business.reviews[reviewIndex]) return;
             const review = business.reviews[reviewIndex];
             const reviewId = getReviewId(businessId, reviewIndex);
-            const currentInteraction = users[currentUser].reviewInteractions[reviewId];
+            const userState = getCurrentUserState();
+            const currentInteraction = userState.reviewInteractions[reviewId];
 
             if (currentInteraction === 'dislike') {
                 review.dislikes--;
-                delete users[currentUser].reviewInteractions[reviewId];
+                delete userState.reviewInteractions[reviewId];
             } else {
                 if (currentInteraction === 'like') {
                     review.likes--;
                 }
                 review.dislikes++;
-                users[currentUser].reviewInteractions[reviewId] = 'dislike';
+                userState.reviewInteractions[reviewId] = 'dislike';
             }
 
             saveAppState();
@@ -3665,7 +3728,8 @@
                     if (townMap) townMap.invalidateSize();
                 }, 120);
             } else if (section === 'favorites') {
-                const favs = allBusinesses.filter(b => users[currentUser].favorites.includes(b.id));
+                const userState = getCurrentUserState();
+                const favs = allBusinesses.filter(b => userState.favorites.includes(b.id));
                 renderBusinesses(favs, 'favoritesGrid');
             } else if (section === 'deals') {
                 renderBusinesses(allBusinesses, 'dealsGrid');
@@ -3713,7 +3777,8 @@
         }
 
         function toggleFavorite(businessId) {
-            const favs = users[currentUser].favorites;
+            const userState = getCurrentUserState();
+            const favs = userState.favorites;
             const index = favs.indexOf(businessId);
             const business = allBusinesses.find(b => b.id === businessId);
             
@@ -3730,7 +3795,8 @@
         }
 
         function getRecommendations() {
-            const favs = users[currentUser].favorites;
+            const userState = getCurrentUserState();
+            const favs = userState.favorites;
             if (favs.length === 0) return [];
 
             const categories = {};
@@ -3815,6 +3881,8 @@
             }
 
             const business = allBusinesses.find(b => b.id === selectedBusinessForReview);
+            if (!business) return;
+            if (!Array.isArray(business.reviews)) business.reviews = [];
             
             business.reviews = business.reviews.filter(r => r.user !== currentUser);
             
