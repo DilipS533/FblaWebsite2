@@ -1702,14 +1702,6 @@
             justify-content: flex-end;
         }
 
-        .docs-list {
-            line-height: 1.8;
-            color: var(--text-primary);
-            margin: 0;
-            padding-left: 1.5rem;
-            font-size: 0.95rem;
-        }
-
         .hidden {
             display: none !important;
         }
@@ -1839,10 +1831,6 @@
                 <button type="button" class="nav-tab-btn" data-section="admin" onclick="switchTab('admin')">
                     <span class="nav-icon-small"></span>
                     <span>🛡️ Admin</span>
-                </button>
-                <button type="button" class="nav-tab-btn" data-section="docs" onclick="switchTab('docs')">
-                    <span class="nav-icon-small"></span>
-                    <span>📚 Tech Docs</span>
                 </button>
             </div>
 
@@ -2051,68 +2039,6 @@
                 </div>
                 <p class="section-subtitle">Review moderation queue and featured business controls.</p>
                 <div id="adminContent" class="panel-card"></div>
-            </div>
-
-            <div id="docsSection" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">📚 Technical Documentation</h2>
-                </div>
-                <div class="panel-grid">
-                    <article class="panel-card">
-                        <h4>Architecture</h4>
-                        <ul class="docs-list">
-                            <li>Frontend: single-page app using HTML/CSS/JavaScript</li>
-                            <li>Map stack: Leaflet + OpenStreetMap tiles + custom overlays</li>
-                            <li>Charts: Chart.js for analytics visualization</li>
-                            <li>Persistence: localStorage fallback and optional Supabase sync</li>
-                        </ul>
-                    </article>
-                    <article class="panel-card">
-                        <h4>Data Model</h4>
-                        <ul class="docs-list">
-                            <li>`users`: auth, favorites, interaction history, role flags</li>
-                            <li>`businesses`: listing metadata, deals, and reviews</li>
-                            <li>`reviews`: user, rating, sentiment signals, dates</li>
-                            <li>`activityLog`: chronological user events</li>
-                        </ul>
-                    </article>
-                    <article class="panel-card">
-                        <h4>Security and Quality</h4>
-                        <ul class="docs-list">
-                            <li>Client-side validation for auth and review submission</li>
-                            <li>Moderation queue for low-rated/high-dislike reviews</li>
-                            <li>Accessibility supports keyboard and ARIA labels</li>
-                            <li>Exported JSON reports for judge verification</li>
-                        </ul>
-                    </article>
-                    <article class="panel-card">
-                        <h4>Supabase Setup</h4>
-                        <ul class="docs-list">
-                            <li>Create table `app_state(state_key text primary key, payload jsonb, updated_at timestamp)`</li>
-                            <li>Set `window.TOWNSQUARE_SUPABASE_URL` and `window.TOWNSQUARE_SUPABASE_ANON_KEY`</li>
-                            <li>Enable RLS policy for your authenticated demo workflow</li>
-                            <li>App will auto-fallback to local mode if keys are missing</li>
-                        </ul>
-                    </article>
-                    <article class="panel-card">
-                        <h4>Supabase Live Sync Controls</h4>
-                        <div class="input-group">
-                            <label for="supabaseUrlInput">Project URL</label>
-                            <input type="text" id="supabaseUrlInput" placeholder="https://your-project-id.supabase.co">
-                        </div>
-                        <div class="input-group">
-                            <label for="supabaseAnonKeyInput">Anon Key</label>
-                            <input type="password" id="supabaseAnonKeyInput" placeholder="eyJ...">
-                        </div>
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <button type="button" class="btn btn-secondary btn-small" onclick="saveSupabaseConfig()">Save & Connect</button>
-                            <button type="button" class="btn btn-secondary btn-small" onclick="pullFromSupabase()">Pull Remote</button>
-                            <button type="button" class="btn btn-secondary btn-small" onclick="pushToSupabase()">Push Local</button>
-                            <button type="button" class="btn btn-secondary btn-small" onclick="clearSupabaseConfig()">Clear Config</button>
-                        </div>
-                        <p id="supabaseStatus" class="admin-meta" style="margin-top:0.7rem;">Supabase status: local mode.</p>
-                    </article>
-                </div>
             </div>
         </div>
     </div>
@@ -3780,8 +3706,7 @@
                 'recommendations': 'recommendationsSection',
                 'compare': 'compareSection',
                 'analytics': 'analyticsSection',
-                'admin': 'adminSection',
-                'docs': 'docsSection'
+                'admin': 'adminSection'
             };
             
             document.getElementById(sectionMap[section]).classList.add('active');
