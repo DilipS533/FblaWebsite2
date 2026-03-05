@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TownSquare - Your Local Business Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -23,34 +23,34 @@
         }
        
         :root {
-            --sunset-orange: #9a4d2c;
-            --deep-teal: #1f4a5f;
+            --sunset-orange: #2f6f66;
+            --deep-teal: #1f3f5b;
             --warm-cream: #f6f4ef;
-            --soft-coral: #c98c73;
+            --soft-coral: #4d7f8b;
             --midnight: #1f2937;
-            --golden: #c7a75c;
-            --shadow: rgba(31, 74, 95, 0.12);
+            --golden: #7fa2b3;
+            --shadow: rgba(23, 49, 76, 0.12);
             --success-green: #10B981;
             --danger-red: #EF4444;
             
             /* Light mode (default) */
-            --bg-primary: #f3f4f6;
-            --bg-secondary: #eceff2;
-            --text-primary: #1f2937;
-            --text-secondary: #5f6b76;
+            --bg-primary: #f4f6f8;
+            --bg-secondary: #e9edf1;
+            --text-primary: #1e2b38;
+            --text-secondary: #5b6774;
             --card-bg: #ffffff;
         }
 
         body.dark-mode {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
             --text-primary: #eee;
             --text-secondary: #aaa;
-            --card-bg: #0f3460;
+            --card-bg: #1b2a3a;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
@@ -373,7 +373,7 @@
             cursor: pointer;
             border-radius: 10px;
             transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
         }
 
         .auth-tab.active {
@@ -399,7 +399,7 @@
             border: 2px solid #E8E8E8;
             border-radius: 10px;
             font-size: 1rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             transition: all 0.3s ease;
         }
 
@@ -417,7 +417,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             display: inline-block;
         }
 
@@ -481,7 +481,7 @@
             border-radius: 10px;
             color: white;
             cursor: pointer;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             font-weight: 600;
             transition: all 0.3s ease;
             display: flex;
@@ -675,7 +675,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-primary);
@@ -814,7 +814,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             font-weight: 600;
         }
 
@@ -885,7 +885,7 @@
             border-radius: 8px;
             text-align: left;
             cursor: pointer;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
         }
 
         .dropdown-option:hover {
@@ -936,7 +936,7 @@
             border: 2px solid #d1dbe1;
             border-radius: 10px;
             padding: 0.75rem 0.85rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             color: var(--text-primary);
             background: var(--card-bg);
         }
@@ -1267,7 +1267,7 @@
             padding: 1rem;
             border: 2px solid #E8E8E8;
             border-radius: 10px;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             font-size: 1rem;
             resize: vertical;
             min-height: 100px;
@@ -1539,7 +1539,7 @@
             padding: 0.75rem 0.9rem;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Serif Display', serif;
             background: var(--card-bg);
             color: var(--text-primary);
         }
@@ -1646,26 +1646,26 @@
     <!-- FBLA Disclaimer Overlay -->
     <div id="disclaimerOverlay" class="disclaimer-overlay">
         <div class="disclaimer-content">
-            <div class="fbla-logo">🏆</div>
+            <div class="fbla-logo">FBLA</div>
             <h2 class="disclaimer-title">FBLA Educational Project</h2>
             <p class="disclaimer-text">
                 This website is created exclusively for Future Business Leaders of America (FBLA) educational purposes.
             </p>
             <div class="disclaimer-highlight">
-                <strong>⚠️ IMPORTANT NOTICE:</strong><br>
+                <strong>IMPORTANT NOTICE:</strong><br>
                 All businesses, reviews, user accounts, ratings, and personal information displayed on this website are entirely <strong>fictional and for demonstration purposes only</strong>. No real businesses or individuals are represented.
             </div>
             <p class="disclaimer-text">
                 By clicking "I Understand," you acknowledge that this is a student project and all content is simulated.
             </p>
-            <button type="button" class="btn btn-primary" onclick="acceptDisclaimer()">✓ I Understand</button>
+            <button type="button" class="btn btn-primary" onclick="acceptDisclaimer()">I Understand</button>
         </div>
     </div>
 
     <!-- FBLA Educational Purpose Banner -->
     <div class="fbla-banner">
         <div class="fbla-content">
-            <div class="fbla-title">🏆 FBLA Project - All Content is Fictional & For Educational Purposes Only</div>
+            <div class="fbla-title">FBLA Project - All Content is Fictional and For Educational Purposes Only</div>
         </div>
     </div>
 
@@ -1722,50 +1722,50 @@
                 <div class="user-controls">
                     <button type="button" class="btn btn-secondary" onclick="startJudgeMode()">Demo Tour</button>
                     <button type="button" class="dark-mode-toggle" onclick="toggleDarkMode()">
-                        <span id="darkModeIcon">🌙</span>
+                        <span id="darkModeIcon">Theme</span>
                         <span id="darkModeText">Dark Mode</span>
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleProfile()">👤 Profile</button>
-                    <button type="button" class="btn btn-secondary" onclick="showHelp()">❓ Help</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleProfile()">Profile</button>
+                    <button type="button" class="btn btn-secondary" onclick="showHelp()">Help</button>
                     <button type="button" class="btn btn-secondary" onclick="logout()">Logout</button>
                 </div>
             </div>
 
             <div id="navigationTaskbar" class="nav-taskbar">
                 <button type="button" class="nav-tab-btn active" data-section="browse" onclick="switchTab('browse')">
-                    <span class="nav-icon-small">🏪</span>
+                    <span class="nav-icon-small"></span>
                     <span>Explore</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="map" onclick="switchTab('map')">
-                    <span class="nav-icon-small">🗺️</span>
+                    <span class="nav-icon-small"></span>
                     <span>Map</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="favorites" onclick="switchTab('favorites')">
-                    <span class="nav-icon-small">💙</span>
+                    <span class="nav-icon-small"></span>
                     <span>Favorites</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="deals" onclick="switchTab('deals')">
-                    <span class="nav-icon-small">💰</span>
+                    <span class="nav-icon-small"></span>
                     <span>Deals</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="recommendations" onclick="switchTab('recommendations')">
-                    <span class="nav-icon-small">🎯</span>
+                    <span class="nav-icon-small"></span>
                     <span>For You</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="compare" onclick="switchTab('compare')">
-                    <span class="nav-icon-small">⚖️</span>
+                    <span class="nav-icon-small"></span>
                     <span>Compare</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="analytics" onclick="switchTab('analytics')">
-                    <span class="nav-icon-small">📊</span>
+                    <span class="nav-icon-small"></span>
                     <span>Analytics</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="admin" onclick="switchTab('admin')">
-                    <span class="nav-icon-small">🛡️</span>
+                    <span class="nav-icon-small"></span>
                     <span>Admin</span>
                 </button>
                 <button type="button" class="nav-tab-btn" data-section="docs" onclick="switchTab('docs')">
-                    <span class="nav-icon-small">🧩</span>
+                    <span class="nav-icon-small"></span>
                     <span>Tech Docs</span>
                 </button>
             </div>
@@ -1814,22 +1814,22 @@
 
             <!-- Achievement Badges -->
             <div id="badgesSection" class="badges-section hidden">
-                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">🏆 Your Achievements</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Your Achievements</h3>
                 <div class="badges-grid">
                     <div class="badge" id="badge-first-review">
-                        <span class="badge-icon">✍️</span>
+                        <span class="badge-icon">A</span>
                         <span class="badge-name">First Review</span>
                     </div>
                     <div class="badge locked" id="badge-reviewer">
-                        <span class="badge-icon">⭐</span>
+                        <span class="badge-icon">B</span>
                         <span class="badge-name">5 Reviews</span>
                     </div>
                     <div class="badge locked" id="badge-explorer">
-                        <span class="badge-icon">🗺️</span>
+                        <span class="badge-icon">C</span>
                         <span class="badge-name">Explorer</span>
                     </div>
                     <div class="badge locked" id="badge-supporter">
-                        <span class="badge-icon">💙</span>
+                        <span class="badge-icon">D</span>
                         <span class="badge-name">Supporter</span>
                     </div>
                 </div>
@@ -1837,7 +1837,7 @@
 
             <!-- Recent Activity Feed -->
             <div id="activitySection" class="activity-feed hidden">
-                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">📋 Recent Activity</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Recent Activity</h3>
                 <div id="activityList"></div>
             </div>
 
@@ -1845,22 +1845,22 @@
             <div class="stats-section">
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <span class="stat-icon">🏪</span>
+                        <span class="stat-icon">B</span>
                         <span class="stat-number" id="statBusinesses">10</span>
                         <span class="stat-label">Local Businesses</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-icon">⭐</span>
+                        <span class="stat-icon">R</span>
                         <span class="stat-number" id="statReviews">40+</span>
                         <span class="stat-label">Community Reviews</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-icon">👥</span>
+                        <span class="stat-icon">U</span>
                         <span class="stat-number" id="statUsers">100+</span>
                         <span class="stat-label">Active Members</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-icon">💰</span>
+                        <span class="stat-icon">D</span>
                         <span class="stat-number" id="statDeals">10</span>
                         <span class="stat-label">Exclusive Deals</span>
                     </div>
@@ -1875,7 +1875,7 @@
                 </div>
 
                 <div class="search-bar">
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon">Search</span>
                     <input type="text" class="search-input" id="searchInput" aria-label="Search businesses by name or category" placeholder="Search by name or category..." oninput="searchBusinesses()">
                 </div>
                 <div id="businessGrid" class="business-grid"></div>
@@ -2050,11 +2050,11 @@
             
             <label>Your Rating</label>
             <div class="star-rating" id="starRating">
-                <span class="star" data-rating="1" onclick="setRating(1)">★</span>
-                <span class="star" data-rating="2" onclick="setRating(2)">★</span>
-                <span class="star" data-rating="3" onclick="setRating(3)">★</span>
-                <span class="star" data-rating="4" onclick="setRating(4)">★</span>
-                <span class="star" data-rating="5" onclick="setRating(5)">★</span>
+                <span class="star" data-rating="1" onclick="setRating(1)">*</span>
+                <span class="star" data-rating="2" onclick="setRating(2)">*</span>
+                <span class="star" data-rating="3" onclick="setRating(3)">*</span>
+                <span class="star" data-rating="4" onclick="setRating(4)">*</span>
+                <span class="star" data-rating="5" onclick="setRating(5)">*</span>
             </div>
 
             <div class="input-group">
@@ -2065,7 +2065,7 @@
             <div class="captcha-container">
                 <div class="captcha-checkbox" onclick="toggleCaptcha()">
                     <div class="checkbox" id="captchaCheckbox">
-                        <span class="checkmark hidden" id="captchaCheck">✓</span>
+                        <span class="checkmark hidden" id="captchaCheck">v</span>
                     </div>
                     <span style="font-weight: 600;">I'm not a robot</span>
                 </div>
@@ -2079,10 +2079,10 @@
     <div id="helpModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeHelpModal()">×</span>
-            <h3 class="modal-header">📖 Quick Help</h3>
+            <h3 class="modal-header">Quick Help</h3>
             
             <div style="max-height: 400px; overflow-y: auto;">
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">🏪 Browse Businesses</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Browse Businesses</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>Use "Explore" to see all local businesses</li>
                     <li>Use category filters to narrow by type</li>
@@ -2090,7 +2090,7 @@
                     <li>Search by name or category</li>
                 </ul>
 
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">⭐ Reviews & Ratings</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Reviews & Ratings</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>Click "Review" on any business card</li>
                     <li>Rate 1-5 stars and write your experience</li>
@@ -2098,27 +2098,27 @@
                     <li>Like/dislike other reviews to help the community</li>
                 </ul>
 
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">💙 Favorites</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Favorites</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>Click the favorite button to save places</li>
                     <li>View all favorites in "My Favorites" tab</li>
                     <li>Get personalized recommendations based on your favorites</li>
                 </ul>
 
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">💰 Hot Deals</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Hot Deals</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>View current deals and special offers</li>
                     <li>Each listing shows its current promotion</li>
                 </ul>
 
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">👤 Profile</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Profile</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>Track your statistics and achievements</li>
                     <li>View recent activity</li>
                     <li>Earn badges for participation</li>
                 </ul>
 
-                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">🌙 Dark Mode</h4>
+                <h4 style="color: var(--sunset-orange); margin-top: 1rem;">Dark Mode</h4>
                 <ul style="line-height: 1.8; color: var(--text-primary);">
                     <li>Toggle between light and dark themes</li>
                     <li>Preference is saved automatically</li>
@@ -2681,11 +2681,11 @@
             const text = document.getElementById('darkModeText');
             
             if (document.body.classList.contains('dark-mode')) {
-                icon.textContent = '☀️';
+                icon.textContent = 'Theme';
                 text.textContent = 'Light Mode';
                 localStorage.setItem('darkMode', 'enabled');
             } else {
-                icon.textContent = '🌙';
+                icon.textContent = 'Theme';
                 text.textContent = 'Dark Mode';
                 localStorage.setItem('darkMode', 'disabled');
             }
@@ -2695,7 +2695,7 @@
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.body.classList.add('dark-mode');
             setTimeout(() => {
-                document.getElementById('darkModeIcon').textContent = '☀️';
+                document.getElementById('darkModeIcon').textContent = 'Theme';
                 document.getElementById('darkModeText').textContent = 'Light Mode';
             }, 100);
         }
@@ -2865,8 +2865,8 @@
             link.click();
             document.body.removeChild(link);
             
-            addActivity('📊 Exported activity report');
-            alert('✅ Report exported successfully!');
+            addActivity('Exported activity report');
+            alert('Report exported successfully.');
         }
 
         function closeDropdowns() {
@@ -3426,7 +3426,7 @@
             const avg = getAverageRating(business);
             const userState = getCurrentUserState();
             const isFavorite = userState.favorites.includes(business.id);
-            const stars = avg > 0 ? '⭐'.repeat(Math.round(avg)) : 'No ratings yet';
+            const stars = avg > 0 ? '*'.repeat(Math.round(avg)) : 'No ratings yet';
             const stats = getReviewStats(business);
             const reviews = Array.isArray(business.reviews) ? business.reviews : [];
             const businessImageMap = {
@@ -3465,14 +3465,14 @@
                     <div class="business-body">
                         <div class="rating">${stars} ${avg > 0 ? avg : ''}</div>
                         <div class="review-stats">
-                            <span class="stat-positive">👍 ${stats.positive} positive</span>
-                            <span class="stat-negative">👎 ${stats.negative} negative</span>
+                            <span class="stat-positive">Positive: ${stats.positive}</span>
+                            <span class="stat-negative">Negative: ${stats.negative}</span>
                         </div>
                         <div class="business-info">
-                            <div class="info-row">📍 ${business.address}</div>
-                            <div class="info-row">📞 ${business.phone}</div>
+                            <div class="info-row">Address: ${business.address}</div>
+                            <div class="info-row">Phone: ${business.phone}</div>
                         </div>
-                        <div class="deal-badge">💰 ${business.deal}</div>
+                        <div class="deal-badge">Deal: ${business.deal}</div>
                         ${reviews.length > 0 ? `
                             <div style="margin-top: 1rem;">
                                 <strong style="color: var(--text-primary);">Recent Reviews:</strong>
@@ -3484,17 +3484,17 @@
                                     <div class="review-item">
                                         <div class="review-header">
                                             <span class="review-user">${r.user}</span>
-                                            <span>${'⭐'.repeat(r.rating)}</span>
+                                            <span>${'*'.repeat(r.rating)}</span>
                                         </div>
                                         <div>${r.text}</div>
                                         <div class="review-actions">
                                             <button type="button" class="review-action-btn ${userInteraction === 'like' ? 'liked' : ''}" 
                                                     onclick="likeReview(${business.id}, ${reviewIndex})">
-                                                👍 ${r.likes}
+                                                Like ${r.likes}
                                             </button>
                                             <button type="button" class="review-action-btn ${userInteraction === 'dislike' ? 'disliked' : ''}" 
                                                     onclick="dislikeReview(${business.id}, ${reviewIndex})">
-                                                👎 ${r.dislikes}
+                                                Dislike ${r.dislikes}
                                             </button>
                                         </div>
                                     </div>
@@ -3503,10 +3503,10 @@
                         ` : '<p style="color: var(--text-secondary); text-align: center; margin: 1rem 0;">No reviews yet. Add the first one.</p>'}
                         <div class="business-actions">
                             <button type="button" class="btn btn-primary btn-small" onclick="openReviewModal(${business.id})">
-                                ✍️ Review
+                                Review
                             </button>
                             <button type="button" class="btn btn-secondary btn-small" onclick="toggleFavorite(${business.id})">
-                                ${isFavorite ? '💙 Favorited' : '🤍 Favorite'}
+                                ${isFavorite ? 'Favorited' : 'Favorite'}
                             </button>
                             <button type="button" class="btn btn-secondary btn-small" onclick="openMapTabForBusiness(${business.id})">
                                 Map
@@ -3523,7 +3523,7 @@
             if (businessList.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">🏪</div>
+                        <div class="empty-icon">Business</div>
                         <h3>No matches right now</h3>
                         <p>Try a different search or filter.</p>
                     </div>
@@ -3785,7 +3785,7 @@
                 addActivity(`Removed ${business.name} from favorites`);
             } else {
                 favs.push(businessId);
-                addActivity(`Added ${business.name} to favorites ❤️`);
+                addActivity(`Added ${business.name} to favorites`);
             }
             
             saveAppState();
@@ -3893,7 +3893,7 @@
                 dislikes: 0
             });
 
-            addActivity(`Reviewed ${business.name} - ${selectedRating}⭐`);
+            addActivity(`Reviewed ${business.name} - ${selectedRating} stars`);
             
             alert('Thanks. Your review was submitted.');
             saveAppState();
@@ -4004,4 +4004,5 @@
     </script>
 </body>
 </html>
+
 
