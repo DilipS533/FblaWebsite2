@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TownSquare - Your Local Business Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -1632,6 +1632,329 @@
             color: var(--text-primary);
             margin: 0;
             padding-left: 1.15rem;
+        }
+
+        /* Cohesive Brand Refresh */
+        :root {
+            --brand-navy: #223247;
+            --brand-teal: #2f6b66;
+            --brand-teal-soft: #4e8780;
+            --brand-surface: #ffffff;
+            --brand-bg: #f4f6f8;
+            --brand-bg-soft: #edf1f4;
+            --brand-line: #d7dee6;
+            --brand-text: #253142;
+            --brand-text-muted: #5d6b7d;
+            --brand-shadow: rgba(21, 42, 68, 0.1);
+
+            --sunset-orange: var(--brand-teal);
+            --deep-teal: var(--brand-navy);
+            --soft-coral: var(--brand-teal-soft);
+            --midnight: var(--brand-text);
+            --golden: #7ca0b6;
+            --bg-primary: var(--brand-bg);
+            --bg-secondary: var(--brand-bg-soft);
+            --text-primary: var(--brand-text);
+            --text-secondary: var(--brand-text-muted);
+            --card-bg: var(--brand-surface);
+            --shadow: var(--brand-shadow);
+        }
+
+        body.dark-mode {
+            --bg-primary: #141d29;
+            --bg-secondary: #1b2635;
+            --text-primary: #e5ecf5;
+            --text-secondary: #98a6b8;
+            --card-bg: #1d2a3a;
+            --shadow: rgba(0, 0, 0, 0.28);
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(180deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            letter-spacing: 0.01em;
+        }
+
+        .bg-decoration {
+            display: none;
+        }
+
+        h1,
+        .section-title,
+        .modal-header,
+        .disclaimer-title,
+        .fbla-title,
+        .business-name {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        .fbla-banner {
+            background: #2b3f58;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 6px 14px rgba(24, 38, 56, 0.18);
+        }
+
+        .hero-section {
+            background: var(--card-bg);
+            border: 1px solid var(--brand-line);
+            border-radius: 20px;
+            box-shadow: 0 10px 26px var(--shadow);
+        }
+
+        .hero-section::before {
+            background: radial-gradient(circle at 30% 35%, rgba(47, 107, 102, 0.08), transparent 68%);
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: var(--deep-teal);
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            max-width: 760px;
+        }
+
+        .stats-section {
+            background: var(--card-bg);
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 10px 24px var(--shadow);
+        }
+
+        .stat-item {
+            color: var(--text-primary);
+            padding: 0.2rem;
+        }
+
+        .stat-number {
+            color: var(--deep-teal);
+            background: none;
+            -webkit-text-fill-color: unset;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            background: rgba(47, 107, 102, 0.12);
+            color: var(--deep-teal);
+        }
+
+        .auth-container,
+        .profile-section,
+        .badges-section,
+        .activity-feed,
+        .map-panel,
+        .panel-card,
+        .modal-content,
+        .disclaimer-content {
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 10px 24px var(--shadow);
+        }
+
+        .user-bar {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 10px 22px var(--shadow);
+        }
+
+        .user-info span {
+            color: var(--deep-teal);
+        }
+
+        .dark-mode-toggle {
+            color: var(--text-primary);
+            background: rgba(47, 107, 102, 0.14);
+        }
+
+        .dark-mode-toggle:hover {
+            background: rgba(47, 107, 102, 0.2);
+        }
+
+        .nav-taskbar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+            gap: 0.55rem;
+            background: var(--card-bg);
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .nav-icon-small {
+            display: none;
+        }
+
+        .nav-tab-btn {
+            max-width: none;
+            padding: 0.78rem 0.85rem;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            background: rgba(47, 107, 102, 0.04);
+        }
+
+        .nav-tab-btn:hover {
+            background: rgba(47, 107, 102, 0.1);
+            color: var(--deep-teal);
+            transform: none;
+        }
+
+        .nav-tab-btn.active {
+            background: var(--deep-teal);
+            color: #ffffff;
+            border-color: var(--deep-teal);
+            box-shadow: none;
+        }
+
+        .top-action-row {
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        .dropdown-trigger,
+        .search-input,
+        input,
+        textarea {
+            font-family: 'Manrope', sans-serif;
+            color: var(--text-primary);
+            border: 1px solid var(--brand-line);
+            border-radius: 10px;
+            background: var(--card-bg);
+        }
+
+        .search-input::placeholder,
+        input::placeholder,
+        textarea::placeholder {
+            color: #91a0b2;
+        }
+
+        .btn {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 500;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background: var(--deep-teal);
+            box-shadow: none;
+        }
+
+        .btn-primary:hover {
+            background: #1a344d;
+            box-shadow: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--deep-teal);
+            border: 1px solid var(--brand-line);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(47, 107, 102, 0.1);
+            color: var(--deep-teal);
+        }
+
+        .business-card {
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 9px 22px var(--shadow);
+        }
+
+        .business-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px var(--shadow);
+        }
+
+        .business-header {
+            min-height: 154px;
+            background: linear-gradient(145deg, rgba(34, 50, 71, 0.9), rgba(47, 107, 102, 0.82));
+        }
+
+        .business-header::after {
+            background: linear-gradient(to top, rgba(18, 28, 41, 0.68), rgba(18, 28, 41, 0.12));
+        }
+
+        .business-category {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        .deal-badge {
+            background: rgba(47, 107, 102, 0.12);
+            color: var(--deep-teal);
+            border: 1px solid rgba(47, 107, 102, 0.2);
+            font-weight: 500;
+        }
+
+        .review-item,
+        .activity-item {
+            border: 1px solid var(--brand-line);
+            background: rgba(47, 107, 102, 0.04);
+        }
+
+        .review-action-btn {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .badge {
+            background: #33506a;
+        }
+
+        .badge-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            border: 1px dashed var(--brand-line);
+            border-radius: 14px;
+            background: rgba(47, 107, 102, 0.04);
+        }
+
+        .judge-content {
+            border: 1px solid var(--brand-line);
+            box-shadow: 0 16px 30px var(--shadow);
+        }
+
+        @media (max-width: 900px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .nav-taskbar {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
 
         .hidden {
