@@ -1714,38 +1714,56 @@
 
         .judge-modal {
             position: fixed;
-            inset: 0;
+            bottom: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 11000;
-            background: rgba(0, 0, 0, 0.6);
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+            width: min(720px, calc(100% - 2rem));
+            pointer-events: none;
         }
 
         .judge-modal.active {
-            display: flex;
+            display: block;
         }
 
         .judge-content {
-            width: min(640px, 95%);
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-lg);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            border: 1.5px solid var(--primary);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 0 0 4px rgba(0,78,100,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            pointer-events: all;
+        }
+
+        .judge-step-badge {
+            flex-shrink: 0;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            white-space: nowrap;
         }
 
         .judge-step {
-            color: var(--text-secondary);
-            margin: 0.75rem 0 1rem;
-            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            flex: 1;
         }
 
         .judge-actions {
             display: flex;
-            gap: 0.75rem;
-            justify-content: flex-end;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
         .hidden {
@@ -2349,13 +2367,13 @@
         </div>
     </div>
 
-    <div id="judgeModeModal" class="judge-modal" role="dialog" aria-modal="true" aria-labelledby="judgeModalHeader" aria-live="polite">
+    <div id="judgeModeModal" class="judge-modal" role="dialog" aria-modal="false" aria-label="Judge Mode Walkthrough" aria-live="polite">
         <div class="judge-content">
-            <h3 class="modal-header" id="judgeModalHeader">Judge Mode Walkthrough</h3>
-            <p id="judgeModeStepText" class="judge-step">Press Start to begin the guided demo of all major features.</p>
+            <span class="judge-step-badge" id="judgeStepBadge">Judge Mode</span>
+            <p id="judgeModeStepText" class="judge-step">Press Start to begin the guided walkthrough of all major features.</p>
             <div class="judge-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeJudgeMode()">Close</button>
-                <button type="button" class="btn btn-primary" id="judgeModeNextBtn" onclick="nextJudgeStep()">Start</button>
+                <button type="button" class="btn btn-secondary btn-small" onclick="closeJudgeMode()">Close</button>
+                <button type="button" class="btn btn-primary btn-small" id="judgeModeNextBtn" onclick="nextJudgeStep()">Start</button>
             </div>
         </div>
     </div>
@@ -3935,21 +3953,22 @@ Guidelines:
         }
 
         const judgeSteps = [
-            { text: 'Step 1: Explore — Use category and review filters. Try the smart search bar — suggestions appear as you type. Press "/" anywhere to focus search.', action: () => switchTab('browse') },
-            { text: 'Step 2: Map — Every business is pinned on a real map. Search a name to jump directly to its marker.', action: () => switchTab('map') },
-            { text: 'Step 3: Deals & Coupons — All current promotions. Click "Coupon" on any card for a printable coupon with unique code and expiry date.', action: () => switchTab('deals') },
-            { text: 'Step 4: Assistant — Ask about categories, deals, top-rated businesses, or get a personalised recommendation. An intelligent Q&A feature.', action: () => switchTab('assistant') },
-            { text: 'Step 5: Compare — Select any two businesses for side-by-side stats including haversine distance calculation.', action: () => switchTab('compare') },
-            { text: 'Step 6: Analytics — Live charts for category, ratings, and sentiment. Use Export controls to filter by category and sort before downloading a JSON report.', action: () => switchTab('analytics') },
-            { text: 'Step 7: Admin — Log in as admin/admin123 to see the moderation queue. Reviews flagged for low rating or high dislikes can be removed.', action: () => switchTab('admin') },
-            { text: 'Step 8: Profile — Tracks reviews, favourites, likes, and badges. All data persists via localStorage. Press Profile to open.', action: () => { switchTab('browse'); toggleProfile(); } }
+            { text: 'Browse businesses, use the category filter and sort by rating. Try typing in the search bar — live suggestions appear as you type.', action: () => switchTab('browse') },
+            { text: 'Every business is pinned on the real map. Use the search box to jump to any marker by name.', action: () => switchTab('map') },
+            { text: 'All current promotions are here. Click "Coupon" on any card to open a printable coupon with a unique code and expiry date.', action: () => switchTab('deals') },
+            { text: 'Ask the AI assistant anything — best rated place, available deals, or a personalised recommendation based on your favourites.', action: () => switchTab('assistant') },
+            { text: 'Pick any two businesses and tick the fields you want to compare. Distance is calculated using the Haversine formula.', action: () => switchTab('compare') },
+            { text: 'Live charts show category breakdown, rating distribution, and sentiment. Use the export controls to filter and download a JSON report.', action: () => switchTab('analytics') },
+            { text: 'Log in as admin / admin123 to see the moderation queue. Reviews with low ratings or high dislikes are flagged automatically.', action: () => switchTab('admin') },
+            { text: 'Profile tracks your reviews, favourites, likes given, and badges earned. All data persists across sessions via localStorage.', action: () => { switchTab('browse'); toggleProfile(); } }
         ];
 
         function startJudgeMode() {
             judgeStepIndex = -1;
             document.getElementById('judgeModeModal').classList.add('active');
             document.getElementById('judgeModeNextBtn').textContent = 'Start';
-            document.getElementById('judgeModeStepText').textContent = 'This tour runs through the main judging checkpoints in under 90 seconds.';
+            document.getElementById('judgeModeStepText').textContent = 'Guided tour of all 8 judging checkpoints. Press Start — the app navigates automatically.';
+            document.getElementById('judgeStepBadge').textContent = 'Judge Mode';
         }
 
         function closeJudgeMode() {
@@ -3959,16 +3978,19 @@ Guidelines:
         function nextJudgeStep() {
             judgeStepIndex += 1;
             const stepText = document.getElementById('judgeModeStepText');
-            const nextBtn = document.getElementById('judgeModeNextBtn');
+            const nextBtn  = document.getElementById('judgeModeNextBtn');
+            const badge    = document.getElementById('judgeStepBadge');
             if (judgeStepIndex >= judgeSteps.length) {
-                stepText.textContent = 'Tour complete. You are ready to present the full workflow.';
+                stepText.textContent = 'Tour complete — all 8 checkpoints covered.';
                 nextBtn.textContent = 'Restart';
+                badge.textContent = 'Done';
                 judgeStepIndex = -1;
                 return;
             }
             const step = judgeSteps[judgeStepIndex];
             if (typeof step.action === 'function') step.action();
             stepText.textContent = step.text;
+            badge.textContent = `Step ${judgeStepIndex + 1} of ${judgeSteps.length}`;
             nextBtn.textContent = judgeStepIndex === judgeSteps.length - 1 ? 'Finish' : 'Next';
         }
 
