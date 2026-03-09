@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Replace CSS in index.html with modern UI design"""
-
-import re
+"""Replace CSS with clean, Apple-like minimal design"""
 
 # Read the file
 with open('index.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
-# New CSS - comprehensive modern design
+# New Apple-inspired CSS - clean, minimal, professional
 new_css = """        /* ============================================
-           TOWNSQUARE - SMOOTH & SLEEK UI OVERHAUL
+           TOWNSQUARE - CLEAN & PROFESSIONAL DESIGN
+           Apple-inspired minimalism
            ============================================ */
 
         * {
