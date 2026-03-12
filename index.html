@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,11 @@
          Rationale: Chosen for zero-dependency standalone execution, broad browser
          compatibility, and rapid iterative prototyping. No build step required.
          Libraries: Leaflet 1.9.4 (BSD-2), Chart.js 4.4.4 (MIT), Supabase JS 2 (MIT),
-                    Google Fonts: Playfair Display, Manrope — UI typography. -->
+                    Google Fonts: Inter — UI typography. -->
     <title>TownSquare - Your Local Business Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         * {
             margin: 0;
@@ -30,17 +27,38 @@
 
         /* ── Accessibility: skip link lets keyboard users bypass nav ── */
         .skip-link {
-            position: absolute; left: -9999px; top: 0;
-            background: #fff; color: #111; padding: 0.65rem 1rem;
-            border-radius: 0 0 8px 8px; z-index: 20000; font-weight: 700;
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            background: #fff;
+            color: #111;
+            padding: 0.65rem 1rem;
+            border-radius: 0 0 8px 8px;
+            z-index: 20000;
+            font-weight: 700;
         }
-        .skip-link:focus { left: 1rem; }
+
+        .skip-link:focus {
+            left: 1rem;
+        }
 
         /* ── Accessibility: visible keyboard focus ring ── */
         :focus-visible {
             outline: 3px solid var(--accent-cyan);
             outline-offset: 2px;
             border-radius: 4px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease;
         }
 
         :root {
@@ -60,33 +78,33 @@
             --shadow-sm: 0 1px 4px rgba(0, 51, 102, 0.08);
             --shadow-md: 0 4px 12px rgba(0, 51, 102, 0.1);
             --shadow-lg: 0 8px 24px rgba(0, 51, 102, 0.15);
-            --font-body: 'Manrope', sans-serif;
-            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-display: 'Inter', sans-serif;
             --focus-ring: rgba(0, 160, 210, 0.28);
-            
-            /* Light mode (default) */
-            --bg-primary: #003366;
-            --bg-secondary: #004080;
-            --text-primary: #ffffff;
-            --text-secondary: #E0E0E0;
-            --card-bg: #004080;
-            --border-color: #005599;
-        }
 
-        body.dark-mode {
-            --primary: #123e72;
-            --primary-light: #1f4f8a;
-            --primary-dark: #0c2f57;
+            /* Light mode (default) */
             --bg-primary: #f6f8fb;
             --bg-secondary: #eef2f7;
             --text-primary: #0f1b2d;
             --text-secondary: #4a5b6d;
             --card-bg: #ffffff;
             --border-color: #d4dde8;
-            --shadow-sm: 0 1px 4px rgba(12, 24, 38, 0.08);
-            --shadow-md: 0 6px 18px rgba(12, 24, 38, 0.12);
-            --shadow-lg: 0 14px 32px rgba(12, 24, 38, 0.16);
-            --focus-ring: rgba(18, 62, 114, 0.2);
+        }
+
+        body.dark-mode {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --bg-primary: #0f1b2d;
+            --bg-secondary: #1a2a44;
+            --text-primary: #f6f8fb;
+            --text-secondary: #a0aec0;
+            --card-bg: #16263f;
+            --border-color: #2d3e59;
+            --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 14px 32px rgba(0, 0, 0, 0.5);
+            --focus-ring: rgba(59, 130, 246, 0.4);
         }
 
         body {
@@ -170,6 +188,7 @@
                 opacity: 0;
                 transform: translateY(50px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -177,8 +196,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .fbla-logo {
@@ -250,6 +274,7 @@
                 opacity: 0;
                 transform: translateY(-30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -345,10 +370,21 @@
             transform: translateY(0);
         }
 
-        .stat-item:nth-child(1).visible { transition-delay: 0.2s; }
-        .stat-item:nth-child(2).visible { transition-delay: 0.4s; }
-        .stat-item:nth-child(3).visible { transition-delay: 0.6s; }
-        .stat-item:nth-child(4).visible { transition-delay: 0.8s; }
+        .stat-item:nth-child(1).visible {
+            transition-delay: 0.2s;
+        }
+
+        .stat-item:nth-child(2).visible {
+            transition-delay: 0.4s;
+        }
+
+        .stat-item:nth-child(3).visible {
+            transition-delay: 0.6s;
+        }
+
+        .stat-item:nth-child(4).visible {
+            transition-delay: 0.8s;
+        }
 
         .stat-number {
             font-family: var(--font-display);
@@ -470,7 +506,7 @@
         }
 
         .btn-secondary {
-            background: var(--neutral-white);
+            background: var(--card-bg);
             color: var(--primary);
             border: 2px solid var(--primary);
         }
@@ -777,16 +813,16 @@
         }
 
         .section-title {
-              font-family: var(--font-display);
-              font-size: 1.6rem;
-              font-weight: 800;
-              color: var(--primary);
-              letter-spacing: -0.4px;
-              padding-bottom: 0.6rem;
-              border-bottom: 2px solid var(--accent);
-              display: inline-block;
-              margin-bottom: 1.5rem;
-          }
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.4px;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
 
         /* Filter Controls */
         .filter-controls {
@@ -1091,16 +1127,45 @@
             }
         }
 
-        .business-card:nth-child(1).visible { animation-delay: 0.1s; }
-        .business-card:nth-child(2).visible { animation-delay: 0.15s; }
-        .business-card:nth-child(3).visible { animation-delay: 0.2s; }
-        .business-card:nth-child(4).visible { animation-delay: 0.25s; }
-        .business-card:nth-child(5).visible { animation-delay: 0.3s; }
-        .business-card:nth-child(6).visible { animation-delay: 0.35s; }
-        .business-card:nth-child(7).visible { animation-delay: 0.4s; }
-        .business-card:nth-child(8).visible { animation-delay: 0.45s; }
-        .business-card:nth-child(9).visible { animation-delay: 0.5s; }
-        .business-card:nth-child(10).visible { animation-delay: 0.55s; }
+        .business-card:nth-child(1).visible {
+            animation-delay: 0.1s;
+        }
+
+        .business-card:nth-child(2).visible {
+            animation-delay: 0.15s;
+        }
+
+        .business-card:nth-child(3).visible {
+            animation-delay: 0.2s;
+        }
+
+        .business-card:nth-child(4).visible {
+            animation-delay: 0.25s;
+        }
+
+        .business-card:nth-child(5).visible {
+            animation-delay: 0.3s;
+        }
+
+        .business-card:nth-child(6).visible {
+            animation-delay: 0.35s;
+        }
+
+        .business-card:nth-child(7).visible {
+            animation-delay: 0.4s;
+        }
+
+        .business-card:nth-child(8).visible {
+            animation-delay: 0.45s;
+        }
+
+        .business-card:nth-child(9).visible {
+            animation-delay: 0.5s;
+        }
+
+        .business-card:nth-child(10).visible {
+            animation-delay: 0.55s;
+        }
 
         .business-card:hover {
             transform: translateY(-6px) scale(1.01);
@@ -1482,86 +1547,6 @@
             opacity: 0.3;
         }
 
-        /* Dark mode readability overrides */
-        body.dark-mode .hero-subtitle,
-        body.dark-mode .empty-state,
-        body.dark-mode .review-date,
-        body.dark-mode .disclaimer-text {
-            color: var(--text-secondary);
-        }
-
-        body.dark-mode .nav-taskbar,
-        body.dark-mode .top-action-row,
-        body.dark-mode .filter-controls,
-        body.dark-mode .modal-content,
-        body.dark-mode .disclaimer-content,
-        body.dark-mode .review-item,
-        body.dark-mode .captcha-container,
-        body.dark-mode .dropdown-menu,
-        body.dark-mode .search-input,
-        body.dark-mode .dropdown-trigger,
-        body.dark-mode input,
-        body.dark-mode textarea,
-        body.dark-mode .checkbox {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border-color: var(--border-color);
-        }
-
-        body.dark-mode .dropdown-option {
-            color: var(--text-primary);
-        }
-
-        body.dark-mode .dropdown-option:hover,
-        body.dark-mode .review-action-btn:hover {
-            background: var(--bg-secondary);
-        }
-
-        body.dark-mode .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border-color: var(--primary-light);
-        }
-
-        body.dark-mode .btn-secondary:hover {
-            background: var(--primary);
-            color: var(--neutral-white);
-        }
-
-        body.dark-mode .disclaimer-title {
-            color: var(--primary-light);
-        }
-
-        body.dark-mode .disclaimer-highlight {
-            background: var(--bg-secondary);
-            border-left-color: var(--accent);
-        }
-
-        body.dark-mode .disclaimer-highlight strong {
-            color: var(--accent-light);
-        }
-
-        body.dark-mode .section-title,
-        body.dark-mode .modal-header,
-        body.dark-mode .filter-label,
-        body.dark-mode .review-user,
-        body.dark-mode label,
-        body.dark-mode .info-row,
-        body.dark-mode .close-modal,
-        body.dark-mode .nav-tab-btn {
-            color: var(--text-primary);
-        }
-
-        body.dark-mode .search-input::placeholder,
-        body.dark-mode input::placeholder,
-        body.dark-mode textarea::placeholder {
-            color: var(--text-secondary);
-        }
-
-        body.dark-mode .map-panel {
-            border-color: var(--border-color);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -1751,7 +1736,7 @@
             border-radius: 14px;
             padding: 1rem 1.25rem;
             border: 1.5px solid var(--primary);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 0 0 4px rgba(0,78,100,0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22), 0 0 0 4px rgba(0, 78, 100, 0.08);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -1792,208 +1777,292 @@
 
     <!-- The below code represents the disclaimer that informs users of true purpose of website -->
 </head>
+
 <body>
-  <style>
-  #ts-intro {
-      position: fixed;
-      inset: 0;
-      z-index: 999999;
-      background: linear-gradient(160deg, var(--primary-dark) 0%, var(--bg-primary) 55%, var(--primary-light) 100%);
-      overflow: hidden;
-      font-family: var(--font-body);
-      transform-origin: var(--ts-zoom-x, 50%) var(--ts-zoom-y, 50%);
-      transition: transform 1.15s cubic-bezier(0.4,0,0.2,1), opacity 0.7s ease 0.35s;
-  }
+    <style>
+        #ts-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            background: linear-gradient(160deg, var(--primary-dark) 0%, var(--bg-primary) 55%, var(--primary-light) 100%);
+            overflow: hidden;
+            font-family: var(--font-body);
+            transform-origin: var(--ts-zoom-x, 50%) var(--ts-zoom-y, 50%);
+            transition: transform 1.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease 0.35s;
+        }
 
-  #ts-intro.ts-zoom {
-      transform: scale(3.2);
-      opacity: 0;
-  }
-  #ts-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-          linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-      background-size: 64px 64px;
-      opacity: 0;
-      animation: tsGridIn 0.7s ease forwards;
-  }
-  @keyframes tsGridIn { to { opacity: 1; } }
-  #ts-glow {
-      position: absolute;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(0,160,210,0.13) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-  }
-  .ts-pin-wrapper {
-      position: absolute;
-      transform: translate(-50%, calc(-100% - 300px));
-      opacity: 0;
-      pointer-events: none;
-  }
-  @keyframes tsPinDrop {
-      0%   { opacity:0; transform: translate(-50%, calc(-100% - 300px)); }
-      55%  { opacity:1; transform: translate(-50%, calc(-100% + 15px)); }
-      70%  { transform: translate(-50%, calc(-100% - 9px)); }
-      82%  { transform: translate(-50%, calc(-100% + 4px)); }
-      91%  { transform: translate(-50%, calc(-100% - 2px)); }
-      100% { opacity:1; transform: translate(-50%, -100%); }
-  }
-  @keyframes tsRipple {
-      0%   { box-shadow: 0 0 0 0 rgba(0,160,210,0.6); }
-      70%  { box-shadow: 0 0 0 22px rgba(0,160,210,0.08); }
-      100% { box-shadow: 0 0 0 38px rgba(0,160,210,0); }
-  }
-  @keyframes tsRippleRed {
-      0%   { box-shadow: 0 0 0 0 rgba(227,30,36,0.7); }
-      70%  { box-shadow: 0 0 0 32px rgba(227,30,36,0.08); }
-      100% { box-shadow: 0 0 0 52px rgba(227,30,36,0); }
-  }
-  @keyframes tsLogoIn {
-      from { opacity:0; transform: translateY(18px); }
-      to   { opacity:1; transform: translateY(0); }
-  }
-  @keyframes tsLineIn {
-      from { width: 0; }
-      to   { width: 80px; }
-  }
-  @keyframes tsTagIn {
-      from { opacity:0; letter-spacing: 7px; }
-      to   { opacity:1; letter-spacing: 4px; }
-  }
-  #ts-logo-wrap {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
-  }
-  #ts-logo-text {
-      font-family: var(--font-display);
-      font-size: clamp(3.2rem, 9vw, 6.5rem);
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -1.5px;
-      line-height: 1;
-  }
-  #ts-logo-accent {
-      width: 0; height: 3px;
-      background: #E31E24;
-      border-radius: 2px;
-      margin: 14px auto 0;
-  }
-  #ts-logo-tag {
-      font-family: var(--font-body);
-      font-size: clamp(0.75rem, 1.8vw, 1rem);
-      color: rgba(255,255,255,0);
-      margin-top: 18px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      font-weight: 500;
-  }
-  </style>
+        #ts-intro.ts-zoom {
+            transform: scale(3.2);
+            opacity: 0;
+        }
 
-  <div id="ts-intro">
-      <div id="ts-grid"></div>
-      <div id="ts-glow"></div>
-      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0;animation:tsGridIn 0.5s 0.4s forwards;" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <line x1="0" y1="42" x2="100" y2="42" stroke="rgba(0,160,210,0.15)" stroke-width="0.4"/>
-          <line x1="0" y1="63" x2="100" y2="63" stroke="rgba(0,160,210,0.10)" stroke-width="0.4"/>
-          <line x1="28" y1="0" x2="28" y2="100" stroke="rgba(0,160,210,0.15)" stroke-width="0.4"/>
-          <line x1="66" y1="0" x2="66" y2="100" stroke="rgba(0,160,210,0.10)" stroke-width="0.4"/>
-          <path d="M 0 28 Q 20 36 28 42 Q 45 52 66 48 Q 80 45 100 55" fill="none" stroke="rgba(0,160,210,0.12)" stroke-width="0.5"/>
-          <path d="M 0 70 Q 28 63 45 66 Q 60 70 80 63 Q 90 60 100 63" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-      </svg>
-      <div id="ts-pins"></div>
-      <div id="ts-logo-wrap">
-          <div id="ts-logo-text">TownSquare</div>
-          <div id="ts-logo-accent"></div>
-          <div id="ts-logo-tag">Local picks from local people</div>
-      </div>
-  </div>
+        #ts-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 64px 64px;
+            opacity: 0;
+            animation: tsGridIn 0.7s ease forwards;
+        }
 
-  <script>
-  (function(){
-      var PINS = [
-          { x:20, y:34, color:'#E31E24', icon:'\u{1F37D}', delay:200  },
-          { x:37, y:57, color:'#00A0D2', icon:'\u2615',    delay:450  },
-          { x:62, y:27, color:'#0EA5E9', icon:'\uD83D\uDCAA', delay:700  },
-          { x:77, y:51, color:'#004080', icon:'\uD83D\uDCBB', delay:950  },
-          { x:14, y:66, color:'#6366F1', icon:'\u2702',    delay:1200 },
-          { x:55, y:71, color:'#F59E0B', icon:'\uD83E\uDD50', delay:1450 },
-          { x:83, y:32, color:'#10B981', icon:'\uD83E\uDDD8', delay:1700 },
-      ];
-      var CENTER = { x:48, y:46, color:'#E31E24', icon:'\u2605', delay:2400, label:'TownSquare', isCenter:true };
+        @keyframes tsGridIn {
+            to {
+                opacity: 1;
+            }
+        }
 
-      function makePin(p){
-          var big = !!p.isCenter;
-          var sz=big?54:36, iSz=big?22:14, fSz=big?18:12;
-          var wrap=document.createElement('div');
-          wrap.className='ts-pin-wrapper';
-          wrap.style.left=p.x+'%'; wrap.style.top=p.y+'%';
-          var inner=document.createElement('div');
-          inner.style.cssText='position:relative;display:inline-flex;align-items:center;justify-content:center;';
-          if(p.label){
-              var lbl=document.createElement('div');
-              lbl.style.cssText='position:absolute;top:-42px;left:50%;transform:translateX(-50%) rotate(45deg);background:var(--primary-dark);color:#fff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.5s ease;font-family:var(--font-body);border:1px solid rgba(0,160,210,0.4);letter-spacing:0.5px;';
-              lbl.textContent=p.label; lbl.id='ts-center-label';
-              inner.appendChild(lbl);
-          }
-          var pin=document.createElement('div');
-          if (p.isCenter) { pin.id = 'ts-center-pin'; }
-          pin.style.cssText='width:'+sz+'px;height:'+sz+'px;background:'+p.color+';border-radius:50% 50% 50% 0;transform:rotate(-45deg);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.2);';
-          var dot=document.createElement('div');
-          dot.style.cssText='width:'+iSz+'px;height:'+iSz+'px;background:rgba(255,255,255,0.9);border-radius:50%;position:absolute;';
-          var ico=document.createElement('span');
-          ico.style.cssText='position:absolute;font-size:'+fSz+'px;transform:rotate(45deg);z-index:1;';
-          ico.textContent=p.icon;
-          pin.appendChild(dot); pin.appendChild(ico);
-          inner.appendChild(pin);
-          var shadow=document.createElement('div');
-          shadow.style.cssText='width:24px;height:8px;background:rgba(0,0,0,0.3);border-radius:50%;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) scaleX(0);filter:blur(4px);opacity:0;transition:all 0.35s ease;';
-          inner.appendChild(shadow);
-          var ripple=document.createElement('div');
-          ripple.style.cssText='position:absolute;width:14px;height:14px;border-radius:50%;bottom:-28px;left:50%;transform:translateX(-50%);';
-          inner.appendChild(ripple);
-          wrap.appendChild(inner);
-          document.getElementById('ts-pins').appendChild(wrap);
-          setTimeout(function(){
-              wrap.style.animation='tsPinDrop 0.75s cubic-bezier(0.22,1.25,0.36,1) forwards';
-              setTimeout(function(){
-                  shadow.style.transform='translateX(-50%) scaleX(1)';
-                  shadow.style.opacity='1';
-                  ripple.style.animation=(big?'tsRippleRed':'tsRipple')+' 0.9s ease-out forwards';
-                  if(p.label){ var l=document.getElementById('ts-center-label'); if(l) l.style.opacity='1'; }
-              },440);
-          },p.delay);
-      }
-      PINS.forEach(makePin); makePin(CENTER);
+        #ts-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 160, 210, 0.13) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
 
-      function zoomToCenterPin() {
-          var intro = document.getElementById('ts-intro');
-          var target = document.getElementById('ts-center-pin');
-          if (!intro || !target) return;
-          var rect = target.getBoundingClientRect();
-          var originX = rect.left + rect.width / 2;
-          var originY = rect.top + rect.height / 2;
-          intro.style.setProperty('--ts-zoom-x', originX + 'px');
-          intro.style.setProperty('--ts-zoom-y', originY + 'px');
-          intro.classList.add('ts-zoom');
-          intro.style.pointerEvents = 'none';
-      }
+        .ts-pin-wrapper {
+            position: absolute;
+            transform: translate(-50%, calc(-100% - 300px));
+            opacity: 0;
+            pointer-events: none;
+        }
 
-      setTimeout(zoomToCenterPin, 3900);
+        @keyframes tsPinDrop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, calc(-100% - 300px));
+            }
 
-      setTimeout(function(){
-          var intro = document.getElementById('ts-intro'); if(!intro) return;
-          intro.style.display = 'none';
-      },5200);
-  })();
-  </script>
-  
-<!-- Accessibility: keyboard users can skip directly to main content -->
+            55% {
+                opacity: 1;
+                transform: translate(-50%, calc(-100% + 15px));
+            }
+
+            70% {
+                transform: translate(-50%, calc(-100% - 9px));
+            }
+
+            82% {
+                transform: translate(-50%, calc(-100% + 4px));
+            }
+
+            91% {
+                transform: translate(-50%, calc(-100% - 2px));
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -100%);
+            }
+        }
+
+        @keyframes tsRipple {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 160, 210, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 22px rgba(0, 160, 210, 0.08);
+            }
+
+            100% {
+                box-shadow: 0 0 0 38px rgba(0, 160, 210, 0);
+            }
+        }
+
+        @keyframes tsRippleRed {
+            0% {
+                box-shadow: 0 0 0 0 rgba(227, 30, 36, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 32px rgba(227, 30, 36, 0.08);
+            }
+
+            100% {
+                box-shadow: 0 0 0 52px rgba(227, 30, 36, 0);
+            }
+        }
+
+        @keyframes tsLogoIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes tsLineIn {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 80px;
+            }
+        }
+
+        @keyframes tsTagIn {
+            from {
+                opacity: 0;
+                letter-spacing: 7px;
+            }
+
+            to {
+                opacity: 1;
+                letter-spacing: 4px;
+            }
+        }
+
+        #ts-logo-wrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #ts-logo-text {
+            font-family: var(--font-display);
+            font-size: clamp(3.2rem, 9vw, 6.5rem);
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -1.5px;
+            line-height: 1;
+        }
+
+        #ts-logo-accent {
+            width: 0;
+            height: 3px;
+            background: #E31E24;
+            border-radius: 2px;
+            margin: 14px auto 0;
+        }
+
+        #ts-logo-tag {
+            font-family: var(--font-body);
+            font-size: clamp(0.75rem, 1.8vw, 1rem);
+            color: rgba(255, 255, 255, 0);
+            margin-top: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+    </style>
+
+    <div id="ts-intro">
+        <div id="ts-grid"></div>
+        <div id="ts-glow"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0;animation:tsGridIn 0.5s 0.4s forwards;"
+            viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="0" y1="42" x2="100" y2="42" stroke="rgba(0,160,210,0.15)" stroke-width="0.4" />
+            <line x1="0" y1="63" x2="100" y2="63" stroke="rgba(0,160,210,0.10)" stroke-width="0.4" />
+            <line x1="28" y1="0" x2="28" y2="100" stroke="rgba(0,160,210,0.15)" stroke-width="0.4" />
+            <line x1="66" y1="0" x2="66" y2="100" stroke="rgba(0,160,210,0.10)" stroke-width="0.4" />
+            <path d="M 0 28 Q 20 36 28 42 Q 45 52 66 48 Q 80 45 100 55" fill="none" stroke="rgba(0,160,210,0.12)"
+                stroke-width="0.5" />
+            <path d="M 0 70 Q 28 63 45 66 Q 60 70 80 63 Q 90 60 100 63" fill="none" stroke="rgba(255,255,255,0.05)"
+                stroke-width="0.5" />
+        </svg>
+        <div id="ts-pins"></div>
+        <div id="ts-logo-wrap">
+            <div id="ts-logo-text">TownSquare</div>
+            <div id="ts-logo-accent"></div>
+            <div id="ts-logo-tag">Local picks from local people</div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var PINS = [
+                { x: 20, y: 34, color: '#E31E24', icon: '\u{1F37D}', delay: 200 },
+                { x: 37, y: 57, color: '#00A0D2', icon: '\u2615', delay: 450 },
+                { x: 62, y: 27, color: '#0EA5E9', icon: '\uD83D\uDCAA', delay: 700 },
+                { x: 77, y: 51, color: '#004080', icon: '\uD83D\uDCBB', delay: 950 },
+                { x: 14, y: 66, color: '#6366F1', icon: '\u2702', delay: 1200 },
+                { x: 55, y: 71, color: '#F59E0B', icon: '\uD83E\uDD50', delay: 1450 },
+                { x: 83, y: 32, color: '#10B981', icon: '\uD83E\uDDD8', delay: 1700 },
+            ];
+            var CENTER = { x: 48, y: 46, color: '#E31E24', icon: '\u2605', delay: 2400, label: 'TownSquare', isCenter: true };
+
+            function makePin(p) {
+                var big = !!p.isCenter;
+                var sz = big ? 54 : 36, iSz = big ? 22 : 14, fSz = big ? 18 : 12;
+                var wrap = document.createElement('div');
+                wrap.className = 'ts-pin-wrapper';
+                wrap.style.left = p.x + '%'; wrap.style.top = p.y + '%';
+                var inner = document.createElement('div');
+                inner.style.cssText = 'position:relative;display:inline-flex;align-items:center;justify-content:center;';
+                if (p.label) {
+                    var lbl = document.createElement('div');
+                    lbl.style.cssText = 'position:absolute;top:-42px;left:50%;transform:translateX(-50%) rotate(45deg);background:var(--primary-dark);color:#fff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.5s ease;font-family:var(--font-body);border:1px solid rgba(0,160,210,0.4);letter-spacing:0.5px;';
+                    lbl.textContent = p.label; lbl.id = 'ts-center-label';
+                    inner.appendChild(lbl);
+                }
+                var pin = document.createElement('div');
+                if (p.isCenter) { pin.id = 'ts-center-pin'; }
+                pin.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:' + p.color + ';border-radius:50% 50% 50% 0;transform:rotate(-45deg);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.2);';
+                var dot = document.createElement('div');
+                dot.style.cssText = 'width:' + iSz + 'px;height:' + iSz + 'px;background:rgba(255,255,255,0.9);border-radius:50%;position:absolute;';
+                var ico = document.createElement('span');
+                ico.style.cssText = 'position:absolute;font-size:' + fSz + 'px;transform:rotate(45deg);z-index:1;';
+                ico.textContent = p.icon;
+                pin.appendChild(dot); pin.appendChild(ico);
+                inner.appendChild(pin);
+                var shadow = document.createElement('div');
+                shadow.style.cssText = 'width:24px;height:8px;background:rgba(0,0,0,0.3);border-radius:50%;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) scaleX(0);filter:blur(4px);opacity:0;transition:all 0.35s ease;';
+                inner.appendChild(shadow);
+                var ripple = document.createElement('div');
+                ripple.style.cssText = 'position:absolute;width:14px;height:14px;border-radius:50%;bottom:-28px;left:50%;transform:translateX(-50%);';
+                inner.appendChild(ripple);
+                wrap.appendChild(inner);
+                document.getElementById('ts-pins').appendChild(wrap);
+                setTimeout(function () {
+                    wrap.style.animation = 'tsPinDrop 0.75s cubic-bezier(0.22,1.25,0.36,1) forwards';
+                    setTimeout(function () {
+                        shadow.style.transform = 'translateX(-50%) scaleX(1)';
+                        shadow.style.opacity = '1';
+                        ripple.style.animation = (big ? 'tsRippleRed' : 'tsRipple') + ' 0.9s ease-out forwards';
+                        if (p.label) { var l = document.getElementById('ts-center-label'); if (l) l.style.opacity = '1'; }
+                    }, 440);
+                }, p.delay);
+            }
+            PINS.forEach(makePin); makePin(CENTER);
+
+            function zoomToCenterPin() {
+                var intro = document.getElementById('ts-intro');
+                var target = document.getElementById('ts-center-pin');
+                if (!intro || !target) return;
+                var rect = target.getBoundingClientRect();
+                var originX = rect.left + rect.width / 2;
+                var originY = rect.top + rect.height / 2;
+                intro.style.setProperty('--ts-zoom-x', originX + 'px');
+                intro.style.setProperty('--ts-zoom-y', originY + 'px');
+                intro.classList.add('ts-zoom');
+                intro.style.pointerEvents = 'none';
+            }
+
+            setTimeout(zoomToCenterPin, 3900);
+
+            setTimeout(function () {
+                var intro = document.getElementById('ts-intro'); if (!intro) return;
+                intro.style.display = 'none';
+            }, 5200);
+        })();
+    </script>
+
+    <!-- Accessibility: keyboard users can skip directly to main content -->
     <a href="#mainContent" class="skip-link">Skip to main content</a>
     <a href="#mainContent" class="skip-link">Skip to main content</a>
     <!-- FBLA Disclaimer Overlay -->
@@ -2006,7 +2075,9 @@
             </p>
             <div class="disclaimer-highlight">
                 <strong>IMPORTANT NOTICE:</strong><br>
-                All businesses, reviews, user accounts, ratings, and personal information displayed on this website are entirely <strong>fictional and for demonstration purposes only</strong>. No real businesses or individuals are represented.
+                All businesses, reviews, user accounts, ratings, and personal information displayed on this website are
+                entirely <strong>fictional and for demonstration purposes only</strong>. No real businesses or
+                individuals are represented.
             </div>
             <p class="disclaimer-text">
                 By clicking "I Understand," you acknowledge that this is a student project and all content is simulated.
@@ -2031,7 +2102,8 @@
             <div class="hero-content">
                 <h1>TownSquare</h1>
                 <p class="tagline">Local picks from local people</p>
-                <p class="hero-subtitle">Find great nearby spots, read honest feedback, and keep track of your own favorites in one place.</p>
+                <p class="hero-subtitle">Find great nearby spots, read honest feedback, and keep track of your own
+                    favorites in one place.</p>
             </div>
         </div>
 
@@ -2052,7 +2124,8 @@
                     <input type="password" id="loginPassword" placeholder="Enter your password">
                 </div>
                 <button type="button" class="btn btn-primary" onclick="login()">Login</button>
-                <p style="margin-top: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Demo account: username: <strong>demo</strong>, password: <strong>demo123</strong></p>
+                <p style="margin-top: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Demo
+                    account: username: <strong>demo</strong>, password: <strong>demo123</strong></p>
             </div>
 
             <div id="registerForm" class="hidden">
@@ -2073,19 +2146,24 @@
             <div class="user-bar" role="navigation" aria-label="User controls">
                 <div class="user-info">Welcome, <span id="currentUser">User</span>!</div>
                 <div class="user-controls">
-                    <button type="button" class="btn btn-secondary" onclick="startJudgeMode()" aria-label="Start demo tour">Demo Tour</button>
-                    <button type="button" class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+                    <button type="button" class="btn btn-secondary" onclick="startJudgeMode()"
+                        aria-label="Start demo tour">Demo Tour</button>
+                    <button type="button" class="dark-mode-toggle" onclick="toggleDarkMode()"
+                        aria-label="Toggle dark mode">
                         <span id="darkModeIcon" aria-hidden="true">🌙</span>
                         <span id="darkModeText">Dark Mode</span>
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleProfile()" aria-expanded="false" aria-controls="profileSection">Profile</button>
-                    <button type="button" class="btn btn-secondary" onclick="showHelp()" aria-label="Open help">Help</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleProfile()" aria-expanded="false"
+                        aria-controls="profileSection">Profile</button>
+                    <button type="button" class="btn btn-secondary" onclick="showHelp()"
+                        aria-label="Open help">Help</button>
                     <button type="button" class="btn btn-secondary" onclick="logout()">Logout</button>
                 </div>
             </div>
 
             <nav id="navigationTaskbar" class="nav-taskbar" aria-label="Main navigation">
-                <button type="button" class="nav-tab-btn active" data-section="browse" onclick="switchTab('browse')" aria-current="page">
+                <button type="button" class="nav-tab-btn active" data-section="browse" onclick="switchTab('browse')"
+                    aria-current="page">
                     <span class="nav-icon-small" aria-hidden="true"></span>
                     <span>Explore</span>
                 </button>
@@ -2101,7 +2179,8 @@
                     <span class="nav-icon-small" aria-hidden="true"></span>
                     <span>Deals</span>
                 </button>
-                <button type="button" class="nav-tab-btn" data-section="recommendations" onclick="switchTab('recommendations')">
+                <button type="button" class="nav-tab-btn" data-section="recommendations"
+                    onclick="switchTab('recommendations')">
                     <span class="nav-icon-small" aria-hidden="true"></span>
                     <span>For You</span>
                 </button>
@@ -2125,22 +2204,32 @@
 
             <div id="browseTopControls" class="top-action-row">
                 <div class="dropdown-wrap">
-                    <button type="button" class="dropdown-trigger" id="categoryDropdownBtn" onclick="toggleDropdown('categoryDropdownMenu')">Category: All</button>
+                    <button type="button" class="dropdown-trigger" id="categoryDropdownBtn"
+                        onclick="toggleDropdown('categoryDropdownMenu')">Category: All</button>
                     <div class="dropdown-menu" id="categoryDropdownMenu">
                         <button type="button" class="dropdown-option" onclick="selectCategoryOption('all')">All</button>
-                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('food')">Food & Dining</button>
-                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('services')">Services</button>
-                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('health')">Health & Wellness</button>
-                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('retail')">Retail</button>
+                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('food')">Food &
+                            Dining</button>
+                        <button type="button" class="dropdown-option"
+                            onclick="selectCategoryOption('services')">Services</button>
+                        <button type="button" class="dropdown-option" onclick="selectCategoryOption('health')">Health &
+                            Wellness</button>
+                        <button type="button" class="dropdown-option"
+                            onclick="selectCategoryOption('retail')">Retail</button>
                     </div>
                 </div>
                 <div class="dropdown-wrap">
-                    <button type="button" class="dropdown-trigger" id="reviewDropdownBtn" onclick="toggleDropdown('reviewDropdownMenu')">Filter: All</button>
+                    <button type="button" class="dropdown-trigger" id="reviewDropdownBtn"
+                        onclick="toggleDropdown('reviewDropdownMenu')">Filter: All</button>
                     <div class="dropdown-menu" id="reviewDropdownMenu">
-                        <button type="button" class="dropdown-option" onclick="selectReviewFilterOption('all')">All</button>
-                        <button type="button" class="dropdown-option" onclick="selectReviewFilterOption('positive')">Mostly Positive</button>
-                        <button type="button" class="dropdown-option" onclick="selectReviewFilterOption('negative')">Has Negative Reviews</button>
-                        <button type="button" class="dropdown-option" onclick="selectReviewFilterOption('highly-rated')">4+ Stars</button>
+                        <button type="button" class="dropdown-option"
+                            onclick="selectReviewFilterOption('all')">All</button>
+                        <button type="button" class="dropdown-option"
+                            onclick="selectReviewFilterOption('positive')">Mostly Positive</button>
+                        <button type="button" class="dropdown-option" onclick="selectReviewFilterOption('negative')">Has
+                            Negative Reviews</button>
+                        <button type="button" class="dropdown-option"
+                            onclick="selectReviewFilterOption('highly-rated')">4+ Stars</button>
                     </div>
                 </div>
             </div>
@@ -2168,7 +2257,8 @@
             <!-- Achievement Badges — unlocked by reviewing, favouriting, and engaging -->
             <div id="badgesSection" class="badges-section hidden" aria-label="Achievement badges">
                 <h3 style="margin-bottom: 0.4rem; color: var(--text-primary);">Your Achievements</h3>
-                <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">Earn badges by writing reviews, saving favourites, and engaging with the community.</p>
+                <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">Earn badges by writing
+                    reviews, saving favourites, and engaging with the community.</p>
                 <div class="badges-grid">
                     <div class="badge" id="badge-first-review" aria-label="First Review badge">
                         <span class="badge-icon" aria-hidden="true">✍️</span>
@@ -2203,22 +2293,22 @@
             <div class="stats-section">
                 <div class="stats-grid">
                     <div class="stat-item">
-                        
+
                         <span class="stat-number" id="statBusinesses">10</span>
                         <span class="stat-label">Local Businesses</span>
                     </div>
                     <div class="stat-item">
-                        
+
                         <span class="stat-number" id="statReviews">40+</span>
                         <span class="stat-label">Community Reviews</span>
                     </div>
                     <div class="stat-item">
-                        
+
                         <span class="stat-number" id="statUsers">100+</span>
                         <span class="stat-label">Active Members</span>
                     </div>
                     <div class="stat-item">
-                        
+
                         <span class="stat-number" id="statDeals">10</span>
                         <span class="stat-label">Exclusive Deals</span>
                     </div>
@@ -2229,24 +2319,22 @@
             <div id="browseSection" class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">Browse Businesses</h2>
-                    <button type="button" id="sortByRatingBtn" class="btn btn-secondary" onclick="sortByRating()">Sort by Rating</button>
+                    <button type="button" id="sortByRatingBtn" class="btn btn-secondary" onclick="sortByRating()">Sort
+                        by Rating</button>
                 </div>
 
                 <div class="search-bar" role="search" style="position:relative;">
                     <span class="search-icon" aria-hidden="true"></span>
                     <input type="search" class="search-input" id="searchInput"
-                           aria-label="Search businesses by name or category"
-                           placeholder="Search by name or category… (press / to focus)"
-                           autocomplete="off"
-                           oninput="onSearchInput(this.value)"
-                           onkeydown="handleSearchKey(event)">
+                        aria-label="Search businesses by name or category"
+                        placeholder="Search by name or category… (press / to focus)" autocomplete="off"
+                        oninput="onSearchInput(this.value)" onkeydown="handleSearchKey(event)">
                     <!-- Smart autocomplete dropdown — suggestions appear as you type -->
                     <div id="autocompleteDropdown" style="
                         position:absolute;top:calc(100% + 4px);left:0;right:0;
                         background:var(--card-bg);border:1px solid var(--border-color);
                         border-radius:8px;box-shadow:var(--shadow-md);z-index:50;
-                        max-height:220px;overflow-y:auto;display:none;"
-                        role="listbox" aria-label="Search suggestions">
+                        max-height:220px;overflow-y:auto;display:none;" role="listbox" aria-label="Search suggestions">
                     </div>
                 </div>
                 <div id="businessGrid" class="business-grid"></div>
@@ -2263,15 +2351,9 @@
                         Realistic street layout with fictional place labels for this FBLA demonstration.
                     </p>
                     <div class="map-search-row">
-                        <input
-                            type="text"
-                            id="mapSearchInput"
-                            class="map-search-input"
-                            list="mapBusinessOptions"
-                            aria-label="Search businesses on map"
-                            placeholder="Search a business on the map..."
-                            onkeydown="if (event.key === 'Enter') searchMapBusiness();"
-                        >
+                        <input type="text" id="mapSearchInput" class="map-search-input" list="mapBusinessOptions"
+                            aria-label="Search businesses on map" placeholder="Search a business on the map..."
+                            onkeydown="if (event.key === 'Enter') searchMapBusiness();">
                         <button type="button" class="btn btn-secondary" onclick="searchMapBusiness()">Search</button>
                     </div>
                     <datalist id="mapBusinessOptions"></datalist>
@@ -2293,20 +2375,24 @@
                 <div class="section-header">
                     <h2 class="section-title">Deals & Coupons</h2>
                 </div>
-                <p class="section-subtitle">Search for a business to find their current deal and grab a printable coupon.</p>
+                <p class="section-subtitle">Search for a business to find their current deal and grab a printable
+                    coupon.</p>
 
                 <!-- Coupon search bar -->
-                <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:2rem;box-shadow:var(--shadow-sm);">
+                <div
+                    style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:2rem;box-shadow:var(--shadow-sm);">
                     <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem;">
                         <div style="position:relative;flex:1;min-width:220px;">
-                            <span style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;"></span>
-                            <input type="search" id="couponSearchInput" placeholder="Search by business name or category…"
-                                   style="width:100%;padding:0.8rem 1rem 0.8rem 2.5rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;font-size:0.95rem;background:var(--card-bg);color:var(--text-primary);"
-                                   oninput="filterCoupons(this.value)" aria-label="Search coupons">
+                            <span
+                                style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;"></span>
+                            <input type="search" id="couponSearchInput"
+                                placeholder="Search by business name or category…"
+                                style="width:100%;padding:0.8rem 1rem 0.8rem 2.5rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;font-size:0.95rem;background:var(--card-bg);color:var(--text-primary);"
+                                oninput="filterCoupons(this.value)" aria-label="Search coupons">
                         </div>
                         <select id="couponCategoryFilter" aria-label="Filter coupons by category"
-                                style="padding:0.8rem 1rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;font-size:0.9rem;background:var(--card-bg);color:var(--text-primary);"
-                                onchange="filterCoupons(document.getElementById('couponSearchInput').value)">
+                            style="padding:0.8rem 1rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;font-size:0.9rem;background:var(--card-bg);color:var(--text-primary);"
+                            onchange="filterCoupons(document.getElementById('couponSearchInput').value)">
                             <option value="all">All Categories</option>
                             <option value="Food & Dining">Food & Dining</option>
                             <option value="Services">Services</option>
@@ -2314,11 +2400,13 @@
                             <option value="Retail">Retail</option>
                         </select>
                     </div>
-                    <p id="couponResultCount" style="font-size:0.85rem;color:var(--text-secondary);">Showing all 10 deals</p>
+                    <p id="couponResultCount" style="font-size:0.85rem;color:var(--text-secondary);">Showing all 10
+                        deals</p>
                 </div>
 
                 <!-- Coupon cards grid -->
-                <div id="couponCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;"></div>
+                <div id="couponCardsGrid"
+                    style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;"></div>
             </div>
 
             <!-- Recommendations Section -->
@@ -2333,51 +2421,76 @@
                 <div class="section-header">
                     <h2 class="section-title">Compare Businesses</h2>
                 </div>
-                <p class="section-subtitle">Choose two businesses and tick exactly which details you want to compare.</p>
+                <p class="section-subtitle">Choose two businesses and tick exactly which details you want to compare.
+                </p>
 
-                <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);">
+                <div
+                    style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);">
                     <!-- Business selectors -->
-                    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;margin-bottom:1.5rem;align-items:end;flex-wrap:wrap;">
+                    <div
+                        style="display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;margin-bottom:1.5rem;align-items:end;flex-wrap:wrap;">
                         <div>
-                            <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-primary);font-size:0.9rem;">Business A</label>
+                            <label
+                                style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-primary);font-size:0.9rem;">Business
+                                A</label>
                             <select id="compareSelectA" aria-label="Select first business"
-                                    style="width:100%;padding:0.75rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;background:var(--card-bg);color:var(--text-primary);font-size:0.9rem;"></select>
+                                style="width:100%;padding:0.75rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;background:var(--card-bg);color:var(--text-primary);font-size:0.9rem;"></select>
                         </div>
                         <div>
-                            <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-primary);font-size:0.9rem;">Business B</label>
+                            <label
+                                style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-primary);font-size:0.9rem;">Business
+                                B</label>
                             <select id="compareSelectB" aria-label="Select second business"
-                                    style="width:100%;padding:0.75rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;background:var(--card-bg);color:var(--text-primary);font-size:0.9rem;"></select>
+                                style="width:100%;padding:0.75rem;border:2px solid var(--border-color);border-radius:8px;font-family:inherit;background:var(--card-bg);color:var(--text-primary);font-size:0.9rem;"></select>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="compareBusinesses()" style="height:fit-content;">Compare</button>
+                        <button type="button" class="btn btn-primary" onclick="compareBusinesses()"
+                            style="height:fit-content;">Compare</button>
                     </div>
 
                     <!-- What to compare checkboxes -->
                     <div style="border-top:1px solid var(--border-color);padding-top:1.25rem;">
-                        <p style="font-weight:600;color:var(--text-primary);margin-bottom:0.85rem;font-size:0.9rem;">What to compare:</p>
+                        <p style="font-weight:600;color:var(--text-primary);margin-bottom:0.85rem;font-size:0.9rem;">
+                            What to compare:</p>
                         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-rating" checked style="width:16px;height:16px;accent-color:var(--primary);"> Rating
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-rating" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Rating
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-reviews" checked style="width:16px;height:16px;accent-color:var(--primary);"> Reviews
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-reviews" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Reviews
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-sentiment" checked style="width:16px;height:16px;accent-color:var(--primary);"> Sentiment
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-sentiment" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Sentiment
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-category" checked style="width:16px;height:16px;accent-color:var(--primary);"> Category
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-category" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Category
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-deal" checked style="width:16px;height:16px;accent-color:var(--primary);"> Deal
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-deal" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Deal
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-address" style="width:16px;height:16px;accent-color:var(--primary);"> Address
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-address"
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Address
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-phone" style="width:16px;height:16px;accent-color:var(--primary);"> Phone
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-phone"
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Phone
                             </label>
-                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
-                                <input type="checkbox" id="cmp-distance" checked style="width:16px;height:16px;accent-color:var(--primary);"> Distance Apart
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+                                <input type="checkbox" id="cmp-distance" checked
+                                    style="width:16px;height:16px;accent-color:var(--primary);"> Distance Apart
                             </label>
                         </div>
                     </div>
@@ -2393,9 +2506,12 @@
                 </div>
                 <p class="section-subtitle">Live metrics generated from reviews, categories, and engagement.</p>
                 <!-- Export controls — customisable report output (required for top rubric score) -->
-                <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-                    <label for="exportCategory" style="font-weight:600;color:var(--text-primary);">Export Category:</label>
-                    <select id="exportCategory" aria-label="Filter export by category" style="padding:0.5rem 0.75rem;border:2px solid var(--border-color);border-radius:6px;background:var(--card-bg);color:var(--text-primary);font-family:inherit;">
+                <div
+                    style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+                    <label for="exportCategory" style="font-weight:600;color:var(--text-primary);">Export
+                        Category:</label>
+                    <select id="exportCategory" aria-label="Filter export by category"
+                        style="padding:0.5rem 0.75rem;border:2px solid var(--border-color);border-radius:6px;background:var(--card-bg);color:var(--text-primary);font-family:inherit;">
                         <option value="all">All Categories</option>
                         <option value="Food &amp; Dining">Food &amp; Dining</option>
                         <option value="Services">Services</option>
@@ -2403,7 +2519,8 @@
                         <option value="Retail">Retail</option>
                     </select>
                     <label for="exportSort" style="font-weight:600;color:var(--text-primary);">Sort By:</label>
-                    <select id="exportSort" aria-label="Sort export results" style="padding:0.5rem 0.75rem;border:2px solid var(--border-color);border-radius:6px;background:var(--card-bg);color:var(--text-primary);font-family:inherit;">
+                    <select id="exportSort" aria-label="Sort export results"
+                        style="padding:0.5rem 0.75rem;border:2px solid var(--border-color);border-radius:6px;background:var(--card-bg);color:var(--text-primary);font-family:inherit;">
                         <option value="rating">Rating (High→Low)</option>
                         <option value="reviews">Most Reviews</option>
                         <option value="name">Name (A→Z)</option>
@@ -2417,7 +2534,8 @@
                     </div>
                     <div class="chart-card">
                         <div class="chart-title">Average Rating by Business</div>
-                        <canvas id="ratingChart" role="img" aria-label="Horizontal bar chart of average ratings"></canvas>
+                        <canvas id="ratingChart" role="img"
+                            aria-label="Horizontal bar chart of average ratings"></canvas>
                     </div>
                     <div class="chart-card">
                         <div class="chart-title">Review Sentiment</div>
@@ -2431,36 +2549,50 @@
                 <div class="section-header">
                     <h2 class="section-title">AI Assistant</h2>
                 </div>
-                <p class="section-subtitle">Ask anything about TownSquare businesses — powered by Claude AI. It knows every business, deal, rating, and can make personalised recommendations.</p>
+                <p class="section-subtitle">Ask anything about TownSquare businesses — powered by Claude AI. It knows
+                    every business, deal, rating, and can make personalised recommendations.</p>
 
-                <div style="max-width:760px;margin:0 auto;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;height:580px;">
+                <div
+                    style="max-width:760px;margin:0 auto;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;height:580px;">
 
                     <!-- Chat header -->
-                    <div style="background:linear-gradient(135deg,var(--primary) 0%,#0057b8 100%);color:white;padding:1.1rem 1.5rem;display:flex;align-items:center;gap:0.85rem;flex-shrink:0;">
-                        <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">AI</div>
+                    <div
+                        style="background:linear-gradient(135deg,var(--primary) 0%,#0057b8 100%);color:white;padding:1.1rem 1.5rem;display:flex;align-items:center;gap:0.85rem;flex-shrink:0;">
+                        <div
+                            style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                            AI</div>
                         <div>
                             <div style="font-weight:700;font-size:1rem;">TownSquare Assistant</div>
-                            <div style="font-size:0.78rem;opacity:0.85;">Powered by Claude AI · Knows all 10 local businesses</div>
+                            <div style="font-size:0.78rem;opacity:0.85;">Powered by Claude AI · Knows all 10 local
+                                businesses</div>
                         </div>
-                        <div style="margin-left:auto;width:9px;height:9px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px #4ade80;" title="Online"></div>
+                        <div style="margin-left:auto;width:9px;height:9px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px #4ade80;"
+                            title="Online"></div>
                     </div>
 
                     <!-- Messages area -->
-                    <div id="chatMessages" style="flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:0.85rem;" aria-live="polite" aria-label="Chat messages"></div>
+                    <div id="chatMessages"
+                        style="flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:0.85rem;"
+                        aria-live="polite" aria-label="Chat messages"></div>
 
                     <!-- Suggestion chips -->
-                    <div id="chatSuggestions" style="display:flex;gap:0.5rem;flex-wrap:wrap;padding:0 1rem 0.75rem;flex-shrink:0;" aria-label="Suggested questions"></div>
+                    <div id="chatSuggestions"
+                        style="display:flex;gap:0.5rem;flex-wrap:wrap;padding:0 1rem 0.75rem;flex-shrink:0;"
+                        aria-label="Suggested questions"></div>
 
                     <!-- Input row -->
-                    <div style="display:flex;padding:0.85rem 1rem;gap:0.6rem;border-top:1px solid var(--border-color);flex-shrink:0;background:var(--card-bg);">
+                    <div
+                        style="display:flex;padding:0.85rem 1rem;gap:0.6rem;border-top:1px solid var(--border-color);flex-shrink:0;background:var(--card-bg);">
                         <input type="text" id="chatInput" placeholder="Ask me anything about local businesses…"
-                               aria-label="Chat input"
-                               style="flex:1;border:2px solid var(--border-color);border-radius:10px;padding:0.7rem 1rem;font-size:0.9rem;font-family:inherit;background:var(--bg-secondary);color:var(--text-primary);transition:border-color 0.2s;"
-                               onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--border-color)';"
-                               onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}">
+                            aria-label="Chat input"
+                            style="flex:1;border:2px solid var(--border-color);border-radius:10px;padding:0.7rem 1rem;font-size:0.9rem;font-family:inherit;background:var(--bg-secondary);color:var(--text-primary);transition:border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--primary)';"
+                            onblur="this.style.borderColor='var(--border-color)';"
+                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}">
                         <button type="button" onclick="sendChatMessage()" aria-label="Send message"
-                                style="background:var(--primary);color:white;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-size:0.9rem;cursor:pointer;font-weight:600;font-family:inherit;transition:background 0.2s;white-space:nowrap;"
-                                onmouseover="this.style.background='var(--primary-light)';" onmouseout="this.style.background='var(--primary)';">
+                            style="background:var(--primary);color:white;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-size:0.9rem;cursor:pointer;font-weight:600;font-family:inherit;transition:background 0.2s;white-space:nowrap;"
+                            onmouseover="this.style.background='var(--primary-light)';"
+                            onmouseout="this.style.background='var(--primary)';">
                             Send
                         </button>
                     </div>
@@ -2480,33 +2612,44 @@
     <!-- Review Modal -->
     <div id="reviewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalHeader">
         <div class="modal-content">
-            <button type="button" class="close-modal" onclick="closeReviewModal()" aria-label="Close review modal">×</button>
+            <button type="button" class="close-modal" onclick="closeReviewModal()"
+                aria-label="Close review modal">×</button>
             <h3 class="modal-header" id="reviewModalHeader">Write a Review</h3>
-            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Reviewing: <strong id="reviewBusinessName"></strong></p>
+            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Reviewing: <strong
+                    id="reviewBusinessName"></strong></p>
 
             <label>Your Rating <span style="color:var(--error)" aria-hidden="true">*</span></label>
             <div class="star-rating" id="starRating" role="radiogroup" aria-label="Star rating (required)">
-                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="1" onclick="setRating(1)" onkeydown="if(event.key===' '||event.key==='Enter')setRating(1)" aria-label="1 star">★</span>
-                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="2" onclick="setRating(2)" onkeydown="if(event.key===' '||event.key==='Enter')setRating(2)" aria-label="2 stars">★</span>
-                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="3" onclick="setRating(3)" onkeydown="if(event.key===' '||event.key==='Enter')setRating(3)" aria-label="3 stars">★</span>
-                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="4" onclick="setRating(4)" onkeydown="if(event.key===' '||event.key==='Enter')setRating(4)" aria-label="4 stars">★</span>
-                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="5" onclick="setRating(5)" onkeydown="if(event.key===' '||event.key==='Enter')setRating(5)" aria-label="5 stars">★</span>
+                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="1" onclick="setRating(1)"
+                    onkeydown="if(event.key===' '||event.key==='Enter')setRating(1)" aria-label="1 star">★</span>
+                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="2" onclick="setRating(2)"
+                    onkeydown="if(event.key===' '||event.key==='Enter')setRating(2)" aria-label="2 stars">★</span>
+                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="3" onclick="setRating(3)"
+                    onkeydown="if(event.key===' '||event.key==='Enter')setRating(3)" aria-label="3 stars">★</span>
+                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="4" onclick="setRating(4)"
+                    onkeydown="if(event.key===' '||event.key==='Enter')setRating(4)" aria-label="4 stars">★</span>
+                <span class="star" role="radio" aria-checked="false" tabindex="0" data-rating="5" onclick="setRating(5)"
+                    onkeydown="if(event.key===' '||event.key==='Enter')setRating(5)" aria-label="5 stars">★</span>
             </div>
             <span id="ratingError" style="color:var(--error);font-size:0.8rem;display:none;" role="alert"></span>
 
             <div class="input-group">
                 <label for="reviewText">Your Review <span style="color:var(--error)" aria-hidden="true">*</span></label>
                 <textarea id="reviewText" placeholder="Share your experience… (minimum 20 characters)"
-                          aria-required="true" aria-describedby="reviewCharCounter"
-                          oninput="updateReviewCounter(this)"></textarea>
+                    aria-required="true" aria-describedby="reviewCharCounter"
+                    oninput="updateReviewCounter(this)"></textarea>
                 <!-- Live character counter — feedback for min/max length validation -->
-                <div id="reviewCharCounter" style="font-size:0.78rem;color:var(--text-secondary);text-align:right;margin-top:0.25rem;" aria-live="polite">0 / 500 characters (minimum 20)</div>
-                <span id="reviewTextError" style="color:var(--error);font-size:0.8rem;display:none;" role="alert"></span>
+                <div id="reviewCharCounter"
+                    style="font-size:0.78rem;color:var(--text-secondary);text-align:right;margin-top:0.25rem;"
+                    aria-live="polite">0 / 500 characters (minimum 20)</div>
+                <span id="reviewTextError" style="color:var(--error);font-size:0.8rem;display:none;"
+                    role="alert"></span>
             </div>
 
             <!-- CAPTCHA verification checkbox — prevents automated bot submissions -->
             <div class="captcha-container" role="group" aria-labelledby="captchaLabel">
-                <div class="captcha-checkbox" onclick="toggleCaptcha()" onkeydown="if(event.key===' ')toggleCaptcha()" tabindex="0" role="checkbox" aria-checked="false" id="captchaWidget">
+                <div class="captcha-checkbox" onclick="toggleCaptcha()" onkeydown="if(event.key===' ')toggleCaptcha()"
+                    tabindex="0" role="checkbox" aria-checked="false" id="captchaWidget">
                     <div class="checkbox" id="captchaCheckbox" aria-hidden="true">
                         <span class="checkmark hidden" id="captchaCheck">&#10003;</span>
                     </div>
@@ -2515,14 +2658,16 @@
             </div>
             <span id="captchaError" style="color:var(--error);font-size:0.8rem;display:none;" role="alert"></span>
 
-            <button type="button" class="btn btn-primary" onclick="submitReview()" style="margin-top:1rem;">Submit Review</button>
+            <button type="button" class="btn btn-primary" onclick="submitReview()" style="margin-top:1rem;">Submit
+                Review</button>
         </div>
     </div>
 
     <!-- Help Modal -->
     <div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpModalHeader">
         <div class="modal-content">
-            <button type="button" class="close-modal" onclick="closeHelpModal()" aria-label="Close help modal">×</button>
+            <button type="button" class="close-modal" onclick="closeHelpModal()"
+                aria-label="Close help modal">×</button>
             <h3 class="modal-header" id="helpModalHeader">Quick Help</h3>
             <div style="max-height: 400px; overflow-y: auto; line-height:1.8;">
                 <h4 style="color: var(--primary); margin-top: 1rem;">Browse Businesses</h4>
@@ -2530,7 +2675,9 @@
                     <li>Use "Explore" to see all local businesses</li>
                     <li>Use category filters to narrow by type</li>
                     <li>Smart search shows suggestions as you type</li>
-                    <li>Press <kbd style="background:var(--bg-secondary);padding:0.1rem 0.4rem;border-radius:3px;">/</kbd> anywhere to focus the search bar</li>
+                    <li>Press <kbd
+                            style="background:var(--bg-secondary);padding:0.1rem 0.4rem;border-radius:3px;">/</kbd>
+                        anywhere to focus the search bar</li>
                 </ul>
                 <h4 style="color: var(--primary); margin-top: 1rem;">Reviews &amp; Ratings</h4>
                 <ul style="color: var(--text-primary); padding-left:1.25rem;">
@@ -2552,7 +2699,9 @@
                 <h4 style="color: var(--primary); margin-top: 1rem;">Accessibility</h4>
                 <ul style="color: var(--text-primary); padding-left:1.25rem;">
                     <li>Full keyboard navigation throughout</li>
-                    <li>Press <kbd style="background:var(--bg-secondary);padding:0.1rem 0.4rem;border-radius:3px;">Esc</kbd> to close any modal</li>
+                    <li>Press <kbd
+                            style="background:var(--bg-secondary);padding:0.1rem 0.4rem;border-radius:3px;">Esc</kbd> to
+                        close any modal</li>
                     <li>All controls have screen reader labels</li>
                     <li>Toggle dark mode for reduced eye strain</li>
                 </ul>
@@ -2563,7 +2712,8 @@
                 </ul>
             </div>
             <p style="margin-top: 2rem; text-align: center; color: var(--text-secondary);">
-                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f4c4a4f4f504d4b7f4b5048514c4e4a5e4d5a115b5a5250">[email&#160;protected]</a>
+                <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                    data-cfemail="3f4c4a4f4f504d4b7f4b5048514c4e4a5e4d5a115b5a5250">[email&#160;protected]</a>
             </p>
         </div>
     </div>
@@ -2571,44 +2721,54 @@
     <!-- Coupon Modal — printable deal view with unique code and expiry -->
     <div id="couponModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="couponModalHeader">
         <div class="modal-content" style="max-width:480px;">
-            <button type="button" class="close-modal" onclick="closeCouponModal()" aria-label="Close coupon modal">×</button>
+            <button type="button" class="close-modal" onclick="closeCouponModal()"
+                aria-label="Close coupon modal">×</button>
             <h3 class="modal-header" id="couponModalHeader">Your Coupon</h3>
             <!-- Coupon card with tear-edge styling -->
-            <div style="border:3px dashed var(--accent);border-radius:14px;padding:2rem;text-align:center;margin:1.5rem 0;background:linear-gradient(135deg,#fff5f5,#fff);position:relative;">
-                <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:1.5rem;" aria-hidden="true">✂️</div>
-                <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--accent);font-weight:700;margin-bottom:0.5rem;" id="couponBusinessName"></div>
+            <div
+                style="border:3px dashed var(--accent);border-radius:14px;padding:2rem;text-align:center;margin:1.5rem 0;background:linear-gradient(135deg,#fff5f5,#fff);position:relative;">
+                <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:1.5rem;"
+                    aria-hidden="true">✂️</div>
+                <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--accent);font-weight:700;margin-bottom:0.5rem;"
+                    id="couponBusinessName"></div>
                 <p id="couponDealText" style="color:var(--text-secondary);margin-bottom:1rem;"></p>
-                <div id="couponCode" style="background:var(--primary);color:white;padding:0.5rem 1.5rem;border-radius:6px;font-family:monospace;font-size:1.2rem;letter-spacing:3px;display:inline-block;margin:0.5rem 0;" aria-label="Coupon code"></div>
-                <p style="font-size:0.82rem;color:var(--text-secondary);margin-top:0.75rem;">Valid at participating locations. Present in-store.</p>
+                <div id="couponCode"
+                    style="background:var(--primary);color:white;padding:0.5rem 1.5rem;border-radius:6px;font-family:monospace;font-size:1.2rem;letter-spacing:3px;display:inline-block;margin:0.5rem 0;"
+                    aria-label="Coupon code"></div>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-top:0.75rem;">Valid at participating
+                    locations. Present in-store.</p>
                 <p id="couponExpiry" style="font-size:0.82rem;color:var(--text-secondary);margin-top:0.25rem;"></p>
             </div>
-            <button type="button" class="btn btn-primary" onclick="window.print()" style="margin-top:0.5rem;">Print Coupon</button>
+            <button type="button" class="btn btn-primary" onclick="window.print()" style="margin-top:0.5rem;">Print
+                Coupon</button>
         </div>
     </div>
 
-    <div id="judgeModeModal" class="judge-modal" role="dialog" aria-modal="false" aria-label="Judge Mode Walkthrough" aria-live="polite">
+    <div id="judgeModeModal" class="judge-modal" role="dialog" aria-modal="false" aria-label="Judge Mode Walkthrough"
+        aria-live="polite">
         <div class="judge-content">
             <span class="judge-step-badge" id="judgeStepBadge">Judge Mode</span>
-            <p id="judgeModeStepText" class="judge-step">Press Start to begin the guided walkthrough of all major features.</p>
+            <p id="judgeModeStepText" class="judge-step">Press Start to begin the guided walkthrough of all major
+                features.</p>
             <div class="judge-actions">
                 <button type="button" class="btn btn-secondary btn-small" onclick="closeJudgeMode()">Close</button>
-                <button type="button" class="btn btn-primary btn-small" id="judgeModeNextBtn" onclick="nextJudgeStep()">Start</button>
+                <button type="button" class="btn btn-primary btn-small" id="judgeModeNextBtn"
+                    onclick="nextJudgeStep()">Start</button>
             </div>
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-    <script
-        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""
-    ></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         // ============================================
         // DATA INITIALIZATION
         // ============================================
-        
+
         /**
          * Business data structure - stores all local businesses
          * Each business has: id, name, category, address, phone, deal, reviews[]
@@ -2622,10 +2782,10 @@
                 phone: "(555) 123-4567",
                 deal: "Buy 2 coffees, get 1 free",
                 reviews: [
-                    {user: "sarah_j", rating: 5, text: "Best coffee in town! The baristas are so friendly and the atmosphere is perfect for working.", date: "2025-01-20", likes: 12, dislikes: 1},
-                    {user: "mike_smith", rating: 4, text: "Great selection of pastries. Coffee is good but a bit pricey.", date: "2025-01-18", likes: 8, dislikes: 2},
-                    {user: "emily_rose", rating: 5, text: "Love this place! Their vanilla latte is incredible.", date: "2025-01-15", likes: 15, dislikes: 0},
-                    {user: "john_doe", rating: 3, text: "Good coffee but can get crowded during morning rush.", date: "2025-01-12", likes: 5, dislikes: 3}
+                    { user: "sarah_j", rating: 5, text: "Best coffee in town! The baristas are so friendly and the atmosphere is perfect for working.", date: "2025-01-20", likes: 12, dislikes: 1 },
+                    { user: "mike_smith", rating: 4, text: "Great selection of pastries. Coffee is good but a bit pricey.", date: "2025-01-18", likes: 8, dislikes: 2 },
+                    { user: "emily_rose", rating: 5, text: "Love this place! Their vanilla latte is incredible.", date: "2025-01-15", likes: 15, dislikes: 0 },
+                    { user: "john_doe", rating: 3, text: "Good coffee but can get crowded during morning rush.", date: "2025-01-12", likes: 5, dislikes: 3 }
                 ]
             },
             {
@@ -2636,9 +2796,9 @@
                 phone: "(555) 234-5678",
                 deal: "Free diagnostic for first-time customers",
                 reviews: [
-                    {user: "alex_tech", rating: 5, text: "Fixed my laptop in under 2 hours! Incredible service and fair prices.", date: "2025-01-19", likes: 20, dislikes: 0},
-                    {user: "lisa_m", rating: 5, text: "Highly recommend! They saved all my data when my phone died.", date: "2025-01-16", likes: 18, dislikes: 1},
-                    {user: "david_k", rating: 4, text: "Good work, just took a bit longer than expected.", date: "2025-01-14", likes: 6, dislikes: 2}
+                    { user: "alex_tech", rating: 5, text: "Fixed my laptop in under 2 hours! Incredible service and fair prices.", date: "2025-01-19", likes: 20, dislikes: 0 },
+                    { user: "lisa_m", rating: 5, text: "Highly recommend! They saved all my data when my phone died.", date: "2025-01-16", likes: 18, dislikes: 1 },
+                    { user: "david_k", rating: 4, text: "Good work, just took a bit longer than expected.", date: "2025-01-14", likes: 6, dislikes: 2 }
                 ]
             },
             {
@@ -2649,10 +2809,10 @@
                 phone: "(555) 345-6789",
                 deal: "20% off organic produce every Wednesday",
                 reviews: [
-                    {user: "healthy_living", rating: 5, text: "Amazing selection of organic products! Fresh produce every day.", date: "2025-01-21", likes: 14, dislikes: 0},
-                    {user: "budget_shopper", rating: 2, text: "Quality is good but prices are way too high for regular shopping.", date: "2025-01-17", likes: 9, dislikes: 12},
-                    {user: "vegan_foodie", rating: 5, text: "Best place for plant-based options! Staff is super helpful.", date: "2025-01-13", likes: 11, dislikes: 1},
-                    {user: "tom_reviews", rating: 4, text: "Great variety, wish they had longer opening hours.", date: "2025-01-10", likes: 7, dislikes: 2}
+                    { user: "healthy_living", rating: 5, text: "Amazing selection of organic products! Fresh produce every day.", date: "2025-01-21", likes: 14, dislikes: 0 },
+                    { user: "budget_shopper", rating: 2, text: "Quality is good but prices are way too high for regular shopping.", date: "2025-01-17", likes: 9, dislikes: 12 },
+                    { user: "vegan_foodie", rating: 5, text: "Best place for plant-based options! Staff is super helpful.", date: "2025-01-13", likes: 11, dislikes: 1 },
+                    { user: "tom_reviews", rating: 4, text: "Great variety, wish they had longer opening hours.", date: "2025-01-10", likes: 7, dislikes: 2 }
                 ]
             },
             {
@@ -2663,9 +2823,9 @@
                 phone: "(555) 456-7890",
                 deal: "First class free for new members",
                 reviews: [
-                    {user: "yoga_lover", rating: 5, text: "Transformative experience! The instructors are world-class.", date: "2025-01-22", likes: 16, dislikes: 0},
-                    {user: "fitness_fan", rating: 4, text: "Great studio, but parking can be difficult during peak hours.", date: "2025-01-19", likes: 8, dislikes: 3},
-                    {user: "mindful_me", rating: 5, text: "Beautiful space, calming atmosphere. Highly recommend the evening classes.", date: "2025-01-11", likes: 13, dislikes: 1}
+                    { user: "yoga_lover", rating: 5, text: "Transformative experience! The instructors are world-class.", date: "2025-01-22", likes: 16, dislikes: 0 },
+                    { user: "fitness_fan", rating: 4, text: "Great studio, but parking can be difficult during peak hours.", date: "2025-01-19", likes: 8, dislikes: 3 },
+                    { user: "mindful_me", rating: 5, text: "Beautiful space, calming atmosphere. Highly recommend the evening classes.", date: "2025-01-11", likes: 13, dislikes: 1 }
                 ]
             },
             {
@@ -2676,11 +2836,11 @@
                 phone: "(555) 567-8901",
                 deal: "Free appetizer with any entree after 5pm",
                 reviews: [
-                    {user: "food_critic_99", rating: 5, text: "Authentic Italian cuisine! The lasagna is to die for.", date: "2025-01-23", likes: 22, dislikes: 1},
-                    {user: "pizza_fan", rating: 4, text: "Great pizza and pasta. Service could be faster during busy times.", date: "2025-01-20", likes: 10, dislikes: 4},
-                    {user: "maria_g", rating: 5, text: "Reminds me of my grandmother's cooking. Absolutely delicious!", date: "2025-01-18", likes: 19, dislikes: 0},
-                    {user: "casual_diner", rating: 3, text: "Food is good but portions are a bit small for the price.", date: "2025-01-15", likes: 6, dislikes: 8},
-                    {user: "italian_expert", rating: 5, text: "Best tiramisu I've ever had outside of Italy!", date: "2025-01-12", likes: 17, dislikes: 2}
+                    { user: "food_critic_99", rating: 5, text: "Authentic Italian cuisine! The lasagna is to die for.", date: "2025-01-23", likes: 22, dislikes: 1 },
+                    { user: "pizza_fan", rating: 4, text: "Great pizza and pasta. Service could be faster during busy times.", date: "2025-01-20", likes: 10, dislikes: 4 },
+                    { user: "maria_g", rating: 5, text: "Reminds me of my grandmother's cooking. Absolutely delicious!", date: "2025-01-18", likes: 19, dislikes: 0 },
+                    { user: "casual_diner", rating: 3, text: "Food is good but portions are a bit small for the price.", date: "2025-01-15", likes: 6, dislikes: 8 },
+                    { user: "italian_expert", rating: 5, text: "Best tiramisu I've ever had outside of Italy!", date: "2025-01-12", likes: 17, dislikes: 2 }
                 ]
             },
             {
@@ -2691,10 +2851,10 @@
                 phone: "(555) 678-9012",
                 deal: "Buy 2 books, get 1 50% off",
                 reviews: [
-                    {user: "avid_reader", rating: 5, text: "Cozy bookstore with excellent selection! Love the reading nook.", date: "2025-01-21", likes: 15, dislikes: 0},
-                    {user: "book_collector", rating: 4, text: "Good variety but could use more rare/vintage books.", date: "2025-01-17", likes: 7, dislikes: 2},
-                    {user: "student_life", rating: 5, text: "Perfect study spot. Great coffee and friendly staff!", date: "2025-01-14", likes: 12, dislikes: 1},
-                    {user: "mystery_fan", rating: 5, text: "Amazing mystery section! Owner gives great recommendations.", date: "2025-01-09", likes: 9, dislikes: 0}
+                    { user: "avid_reader", rating: 5, text: "Cozy bookstore with excellent selection! Love the reading nook.", date: "2025-01-21", likes: 15, dislikes: 0 },
+                    { user: "book_collector", rating: 4, text: "Good variety but could use more rare/vintage books.", date: "2025-01-17", likes: 7, dislikes: 2 },
+                    { user: "student_life", rating: 5, text: "Perfect study spot. Great coffee and friendly staff!", date: "2025-01-14", likes: 12, dislikes: 1 },
+                    { user: "mystery_fan", rating: 5, text: "Amazing mystery section! Owner gives great recommendations.", date: "2025-01-09", likes: 9, dislikes: 0 }
                 ]
             },
             {
@@ -2705,10 +2865,10 @@
                 phone: "(555) 789-0123",
                 deal: "10% off first grooming appointment",
                 reviews: [
-                    {user: "dog_mom", rating: 5, text: "They treat my pup like royalty! Always come out looking adorable.", date: "2025-01-22", likes: 18, dislikes: 0},
-                    {user: "cat_lady", rating: 4, text: "Great service but they don't take appointments, only walk-ins.", date: "2025-01-19", likes: 6, dislikes: 3},
-                    {user: "pet_parent", rating: 5, text: "Gentle with nervous pets. Very patient and caring staff.", date: "2025-01-16", likes: 14, dislikes: 1},
-                    {user: "furry_friend", rating: 2, text: "Overpriced for basic grooming. Can find cheaper elsewhere.", date: "2025-01-13", likes: 4, dislikes: 11}
+                    { user: "dog_mom", rating: 5, text: "They treat my pup like royalty! Always come out looking adorable.", date: "2025-01-22", likes: 18, dislikes: 0 },
+                    { user: "cat_lady", rating: 4, text: "Great service but they don't take appointments, only walk-ins.", date: "2025-01-19", likes: 6, dislikes: 3 },
+                    { user: "pet_parent", rating: 5, text: "Gentle with nervous pets. Very patient and caring staff.", date: "2025-01-16", likes: 14, dislikes: 1 },
+                    { user: "furry_friend", rating: 2, text: "Overpriced for basic grooming. Can find cheaper elsewhere.", date: "2025-01-13", likes: 4, dislikes: 11 }
                 ]
             },
             {
@@ -2719,11 +2879,11 @@
                 phone: "(555) 890-1234",
                 deal: "No joining fee for January signups",
                 reviews: [
-                    {user: "gym_rat", rating: 4, text: "Great equipment and clean facilities. Gets busy after work.", date: "2025-01-23", likes: 11, dislikes: 3},
-                    {user: "fitness_journey", rating: 5, text: "Amazing trainers! Lost 20 pounds in 3 months.", date: "2025-01-20", likes: 21, dislikes: 0},
-                    {user: "cardio_king", rating: 3, text: "Decent gym but could use more cardio machines.", date: "2025-01-17", likes: 5, dislikes: 4},
-                    {user: "weightlifter_x", rating: 5, text: "Best free weight section in town. Love the atmosphere!", date: "2025-01-14", likes: 16, dislikes: 2},
-                    {user: "yoga_girl", rating: 4, text: "Good classes but would love more variety in yoga styles.", date: "2025-01-11", likes: 8, dislikes: 1}
+                    { user: "gym_rat", rating: 4, text: "Great equipment and clean facilities. Gets busy after work.", date: "2025-01-23", likes: 11, dislikes: 3 },
+                    { user: "fitness_journey", rating: 5, text: "Amazing trainers! Lost 20 pounds in 3 months.", date: "2025-01-20", likes: 21, dislikes: 0 },
+                    { user: "cardio_king", rating: 3, text: "Decent gym but could use more cardio machines.", date: "2025-01-17", likes: 5, dislikes: 4 },
+                    { user: "weightlifter_x", rating: 5, text: "Best free weight section in town. Love the atmosphere!", date: "2025-01-14", likes: 16, dislikes: 2 },
+                    { user: "yoga_girl", rating: 4, text: "Good classes but would love more variety in yoga styles.", date: "2025-01-11", likes: 8, dislikes: 1 }
                 ]
             },
             {
@@ -2734,10 +2894,10 @@
                 phone: "(555) 901-2345",
                 deal: "Free cookie with coffee purchase",
                 reviews: [
-                    {user: "sweet_tooth", rating: 5, text: "Heaven on earth! The croissants are absolutely perfect.", date: "2025-01-24", likes: 25, dislikes: 0},
-                    {user: "baker_enthusiast", rating: 5, text: "Real artisan quality. You can taste the love in every bite.", date: "2025-01-21", likes: 19, dislikes: 1},
-                    {user: "breakfast_fan", rating: 4, text: "Delicious but sells out early. Get there before 10am!", date: "2025-01-18", likes: 13, dislikes: 2},
-                    {user: "gluten_free_life", rating: 2, text: "Wish they had more gluten-free options.", date: "2025-01-15", likes: 7, dislikes: 9}
+                    { user: "sweet_tooth", rating: 5, text: "Heaven on earth! The croissants are absolutely perfect.", date: "2025-01-24", likes: 25, dislikes: 0 },
+                    { user: "baker_enthusiast", rating: 5, text: "Real artisan quality. You can taste the love in every bite.", date: "2025-01-21", likes: 19, dislikes: 1 },
+                    { user: "breakfast_fan", rating: 4, text: "Delicious but sells out early. Get there before 10am!", date: "2025-01-18", likes: 13, dislikes: 2 },
+                    { user: "gluten_free_life", rating: 2, text: "Wish they had more gluten-free options.", date: "2025-01-15", likes: 7, dislikes: 9 }
                 ]
             },
             {
@@ -2748,11 +2908,11 @@
                 phone: "(555) 012-3456",
                 deal: "15% off all services for students",
                 reviews: [
-                    {user: "stylish_sue", rating: 5, text: "Best haircut I've ever had! Lisa is a magician with scissors.", date: "2025-01-23", likes: 17, dislikes: 0},
-                    {user: "trendy_hair", rating: 4, text: "Good cuts but appointment wait times can be long.", date: "2025-01-20", likes: 9, dislikes: 3},
-                    {user: "college_student", rating: 5, text: "Love the student discount! Always leave happy.", date: "2025-01-17", likes: 12, dislikes: 1},
-                    {user: "mens_grooming", rating: 3, text: "Okay for basic cuts but nothing special.", date: "2025-01-14", likes: 4, dislikes: 6},
-                    {user: "color_queen", rating: 5, text: "Amazing color work! They really listen to what you want.", date: "2025-01-10", likes: 15, dislikes: 2}
+                    { user: "stylish_sue", rating: 5, text: "Best haircut I've ever had! Lisa is a magician with scissors.", date: "2025-01-23", likes: 17, dislikes: 0 },
+                    { user: "trendy_hair", rating: 4, text: "Good cuts but appointment wait times can be long.", date: "2025-01-20", likes: 9, dislikes: 3 },
+                    { user: "college_student", rating: 5, text: "Love the student discount! Always leave happy.", date: "2025-01-17", likes: 12, dislikes: 1 },
+                    { user: "mens_grooming", rating: 3, text: "Okay for basic cuts but nothing special.", date: "2025-01-14", likes: 4, dislikes: 6 },
+                    { user: "color_queen", rating: 5, text: "Amazing color work! They really listen to what you want.", date: "2025-01-10", likes: 15, dislikes: 2 }
                 ]
             }
         ];
@@ -3134,7 +3294,7 @@
             document.body.classList.toggle('dark-mode');
             const icon = document.getElementById('darkModeIcon');
             const text = document.getElementById('darkModeText');
-            
+
             if (document.body.classList.contains('dark-mode')) {
                 icon.textContent = 'Theme';
                 text.textContent = 'Light Mode';
@@ -3160,13 +3320,13 @@
             const profile = document.getElementById('profileSection');
             const badges = document.getElementById('badgesSection');
             const activity = document.getElementById('activitySection');
-            
+
             const isHidden = profile.classList.contains('hidden');
-            
+
             profile.classList.toggle('hidden');
             badges.classList.toggle('hidden');
             activity.classList.toggle('hidden');
-            
+
             if (isHidden) {
                 updateProfileStats();
                 updateBadges();
@@ -3180,13 +3340,13 @@
             const reviewCount = allBusinesses.reduce((count, b) => {
                 return count + b.reviews.filter(r => r.user === currentUser).length;
             }, 0);
-            
+
             const favoriteCount = userState.favorites.length;
-            
+
             const likesGiven = Object.keys(userState.reviewInteractions).length;
-            
+
             const badgeCount = getBadgeCount();
-            
+
             document.getElementById('userReviewCount').textContent = reviewCount;
             document.getElementById('userFavoriteCount').textContent = favoriteCount;
             document.getElementById('userLikesGiven').textContent = likesGiven;
@@ -3200,12 +3360,12 @@
             const reviewCount = allBusinesses.reduce((c, b) => {
                 return c + b.reviews.filter(r => r.user === currentUser).length;
             }, 0);
-            
+
             if (reviewCount >= 1) count++;
             if (reviewCount >= 5) count++;
             if (userState.favorites.length >= 3) count++;
             if (Object.keys(userState.reviewInteractions).length >= 10) count++;
-            
+
             return count;
         }
 
@@ -3214,22 +3374,22 @@
             const reviewCount = allBusinesses.reduce((c, b) => {
                 return c + b.reviews.filter(r => r.user === currentUser).length;
             }, 0);
-            
+
             // First Review Badge
             if (reviewCount >= 1) {
                 document.getElementById('badge-first-review').classList.remove('locked');
             }
-            
+
             // 5 Reviews Badge
             if (reviewCount >= 5) {
                 document.getElementById('badge-reviewer').classList.remove('locked');
             }
-            
+
             // Explorer Badge (3+ favorites)
             if (userState.favorites.length >= 3) {
                 document.getElementById('badge-explorer').classList.remove('locked');
             }
-            
+
             // Supporter Badge (10+ likes given)
             if (Object.keys(userState.reviewInteractions).length >= 10) {
                 document.getElementById('badge-supporter').classList.remove('locked');
@@ -3254,7 +3414,7 @@
                 activityList.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No recent activity</p>';
                 return;
             }
-            
+
             activityList.innerHTML = activityLog.map(a => `
                 <div class="activity-item">
                     <div>${a.text}</div>
@@ -3264,7 +3424,7 @@
         }
 
         // Help System
-        function showHelp()       { document.getElementById('helpModal').classList.add('active'); }
+        function showHelp() { document.getElementById('helpModal').classList.add('active'); }
         function closeHelpModal() { document.getElementById('helpModal').classList.remove('active'); }
 
         // ── Non-blocking toast notification (replaces alert() calls) ──────────
@@ -3277,10 +3437,10 @@
             toast.setAttribute('aria-live', 'polite');
             toast.textContent = message;
             Object.assign(toast.style, {
-                position:'fixed', bottom:'2rem', right:'2rem', zIndex:'99999',
-                background:'var(--primary)', color:'white', padding:'0.85rem 1.5rem',
-                borderRadius:'10px', boxShadow:'var(--shadow-lg)', fontSize:'0.9rem',
-                fontFamily:'inherit', fontWeight:'500', transition:'opacity 0.3s', opacity:'1', maxWidth:'320px'
+                position: 'fixed', bottom: '2rem', right: '2rem', zIndex: '99999',
+                background: 'var(--primary)', color: 'white', padding: '0.85rem 1.5rem',
+                borderRadius: '10px', boxShadow: 'var(--shadow-lg)', fontSize: '0.9rem',
+                fontFamily: 'inherit', fontWeight: '500', transition: 'opacity 0.3s', opacity: '1', maxWidth: '320px'
             });
             document.body.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
@@ -3291,13 +3451,13 @@
             const business = allBusinesses.find(b => b.id === businessId);
             if (!business) return;
             document.getElementById('couponBusinessName').textContent = business.name;
-            document.getElementById('couponDealText').textContent     = business.deal;
-            document.getElementById('couponCode').textContent         = business.couponCode || ('DEAL' + businessId);
+            document.getElementById('couponDealText').textContent = business.deal;
+            document.getElementById('couponCode').textContent = business.couponCode || ('DEAL' + businessId);
             // Generate expiry 30 days from today
             const expiry = new Date();
             expiry.setDate(expiry.getDate() + 30);
             document.getElementById('couponExpiry').textContent =
-                `Expires: ${expiry.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}`;
+                `Expires: ${expiry.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
             document.getElementById('couponModal').classList.add('active');
             // Unlock Deal Seeker badge on first coupon view
             const badge = document.getElementById('badge-dealseeker');
@@ -3330,7 +3490,7 @@
             dropdown.innerHTML = matches.map((b, i) =>
                 `<div style="padding:0.75rem 1rem;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s;"
                       role="option" tabindex="-1" data-index="${i}"
-                      onclick="selectAutocomplete('${b.name.replace(/'/g,"\\'")}', this)"
+                      onclick="selectAutocomplete('${b.name.replace(/'/g, "\\'")}', this)"
                       onmouseenter="autocompleteIndex=${i};highlightAutocomplete()">
                     <span>${b.name}</span>
                     <span style="font-size:0.75rem;color:var(--text-secondary);">${b.category}</span>
@@ -3423,7 +3583,7 @@
                 'Compare food options', 'Pet grooming services?'
             ];
             container.innerHTML = suggestions.map(s =>
-                `<button type="button" onclick="askChatBot('${s.replace(/'/g,"\\'")}', true)"
+                `<button type="button" onclick="askChatBot('${s.replace(/'/g, "\\'")}', true)"
                     style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:20px;padding:0.3rem 0.8rem;font-size:0.79rem;cursor:pointer;transition:all 0.2s;font-family:inherit;color:var(--text-primary);white-space:nowrap;"
                     onmouseover="this.style.background='var(--primary)';this.style.color='white';this.style.borderColor='var(--primary)';"
                     onmouseout="this.style.background='var(--bg-secondary)';this.style.color='var(--text-primary)';this.style.borderColor='var(--border-color)';">${s}</button>`
@@ -3454,9 +3614,8 @@ Here is the live data for all businesses on TownSquare right now:
 
 ${businessContext}
 
-The current user is "${currentUser}". Their favourites are: ${
-    allBusinesses.filter(b => getCurrentUserState().favorites.includes(b.id)).map(b => b.name).join(', ') || 'none yet'
-}.
+The current user is "${currentUser}". Their favourites are: ${allBusinesses.filter(b => getCurrentUserState().favorites.includes(b.id)).map(b => b.name).join(', ') || 'none yet'
+                }.
 
 Guidelines:
 - Be concise and conversational — keep responses under 150 words unless detail is specifically requested.
@@ -3477,18 +3636,20 @@ Guidelines:
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        model: 'claude-sonnet-4-20250514',
+                        model: 'gpt-4o-mini',
                         max_tokens: 1000,
-                        system: systemPrompt,
-                        messages: chatHistory
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            ...chatHistory
+                        ]
                     })
                 });
 
                 const data = await response.json();
                 const reply = data.content?.[0]?.text
-                             || data.choices?.[0]?.message?.content
-                             || data.answer || data.text || data.reply || data.message
-                             || "Sorry, I couldn't get a response. Please try again!";
+                    || data.choices?.[0]?.message?.content
+                    || data.answer || data.text || data.reply || data.message
+                    || "Sorry, I couldn't get a response. Please try again!";
 
                 // Add assistant reply to history for multi-turn context
                 chatHistory.push({ role: 'assistant', content: reply });
@@ -3519,10 +3680,10 @@ Guidelines:
         // ── Coupon Section — searchable deal cards ────────────────────────────
         function filterCoupons(query) {
             const cat = document.getElementById('couponCategoryFilter')?.value || 'all';
-            const q   = (query || '').toLowerCase().trim();
-            let list  = allBusinesses;
+            const q = (query || '').toLowerCase().trim();
+            let list = allBusinesses;
             if (cat !== 'all') list = list.filter(b => b.category === cat);
-            if (q)             list = list.filter(b => b.name.toLowerCase().includes(q) || b.deal.toLowerCase().includes(q) || b.category.toLowerCase().includes(q));
+            if (q) list = list.filter(b => b.name.toLowerCase().includes(q) || b.deal.toLowerCase().includes(q) || b.category.toLowerCase().includes(q));
             renderCouponCards(list);
             const countEl = document.getElementById('couponResultCount');
             if (countEl) countEl.textContent = list.length === allBusinesses.length
@@ -3542,17 +3703,17 @@ Guidelines:
             }
 
             const catColors = {
-                'Food & Dining':    { bg:'#fff7ed', border:'#fb923c', icon:'F' },
-                'Services':         { bg:'#eff6ff', border:'#60a5fa', icon:'S' },
-                'Health & Wellness':{ bg:'#f0fdf4', border:'#4ade80', icon:'H' },
-                'Retail':           { bg:'#fdf4ff', border:'#c084fc', icon:'R' },
+                'Food & Dining': { bg: '#fff7ed', border: '#fb923c', icon: 'F' },
+                'Services': { bg: '#eff6ff', border: '#60a5fa', icon: 'S' },
+                'Health & Wellness': { bg: '#f0fdf4', border: '#4ade80', icon: 'H' },
+                'Retail': { bg: '#fdf4ff', border: '#c084fc', icon: 'R' },
             };
 
             grid.innerHTML = list.map(b => {
-                const c = catColors[b.category] || { bg:'#f8fafc', border:'#94a3b8', icon:'🏪' };
+                const c = catColors[b.category] || { bg: '#f8fafc', border: '#94a3b8', icon: '🏪' };
                 // Expiry 30 days from today
                 const expiry = new Date(); expiry.setDate(expiry.getDate() + 30);
-                const expiryStr = expiry.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+                const expiryStr = expiry.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const avg = getAverageRating(b);
                 return `
                 <div style="background:${c.bg};border:2px solid ${c.border};border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform 0.2s,box-shadow 0.2s;"
@@ -3613,7 +3774,7 @@ Guidelines:
         function exportReport() {
             // Read user-selected export options from the analytics controls
             const categoryFilter = document.getElementById('exportCategory')?.value || 'all';
-            const sortMode       = document.getElementById('exportSort')?.value       || 'rating';
+            const sortMode = document.getElementById('exportSort')?.value || 'rating';
 
             // Filter businesses by selected category
             let exportBusinesses = [...allBusinesses];
@@ -3643,34 +3804,34 @@ Guidelines:
 
             // Structured report — mirrors all rubric requirements for output & data analysis
             const report = {
-                generatedBy:    'TownSquare — FBLA Coding & Programming 2025-2026',
-                user:           currentUser,
-                generatedDate:  new Date().toISOString(),
-                exportFilters:  { category: categoryFilter, sortBy: sortMode },
+                generatedBy: 'TownSquare — FBLA Coding & Programming 2025-2026',
+                user: currentUser,
+                generatedDate: new Date().toISOString(),
+                exportFilters: { category: categoryFilter, sortBy: sortMode },
                 userStatistics: {
-                    totalReviews:   userReviews.length,
+                    totalReviews: userReviews.length,
                     totalFavorites: favoriteBusinesses.length,
-                    likesGiven:     Object.keys(getCurrentUserState().reviewInteractions).length,
-                    badgesEarned:   getBadgeCount()
+                    likesGiven: Object.keys(getCurrentUserState().reviewInteractions).length,
+                    badgesEarned: getBadgeCount()
                 },
                 businessSummary: exportBusinesses.map(b => ({
-                    name:       b.name,
-                    category:   b.category,
-                    avgRating:  parseFloat(getAverageRating(b)),
-                    reviewCount:b.reviews.length,
-                    deal:       b.deal,
-                    sentiment:  getReviewStats(b)
+                    name: b.name,
+                    category: b.category,
+                    avgRating: parseFloat(getAverageRating(b)),
+                    reviewCount: b.reviews.length,
+                    deal: b.deal,
+                    sentiment: getReviewStats(b)
                 })),
                 userReviews,
-                favorites:      favoriteBusinesses,
+                favorites: favoriteBusinesses,
                 recentActivity: activityLog,
-                preferences:    { darkMode: document.body.classList.contains('dark-mode') }
+                preferences: { darkMode: document.body.classList.contains('dark-mode') }
             };
 
             const dataBlob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-            const url  = URL.createObjectURL(dataBlob);
+            const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
-            link.href     = url;
+            link.href = url;
             link.download = `TownSquare_Report_${currentUser}_${Date.now()}.json`;
             document.body.appendChild(link);
             link.click();
@@ -3884,7 +4045,7 @@ Guidelines:
         function compareBusinesses() {
             const selectA = document.getElementById('compareSelectA');
             const selectB = document.getElementById('compareSelectB');
-            const result  = document.getElementById('compareResult');
+            const result = document.getElementById('compareResult');
             if (!selectA || !selectB || !result) return;
 
             const bA = allBusinesses.find(b => b.id === Number(selectA.value));
@@ -3896,20 +4057,20 @@ Guidelines:
 
             const avgA = Number(getAverageRating(bA)) || 0;
             const avgB = Number(getAverageRating(bB)) || 0;
-            const sA   = getReviewStats(bA);
-            const sB   = getReviewStats(bB);
+            const sA = getReviewStats(bA);
+            const sB = getReviewStats(bB);
             const dist = getDistanceMiles(getBusinessLatLng(bA), getBusinessLatLng(bB));
 
             // Read which fields are checked
             const show = {
-                rating:    document.getElementById('cmp-rating')?.checked,
-                reviews:   document.getElementById('cmp-reviews')?.checked,
+                rating: document.getElementById('cmp-rating')?.checked,
+                reviews: document.getElementById('cmp-reviews')?.checked,
                 sentiment: document.getElementById('cmp-sentiment')?.checked,
-                category:  document.getElementById('cmp-category')?.checked,
-                deal:      document.getElementById('cmp-deal')?.checked,
-                address:   document.getElementById('cmp-address')?.checked,
-                phone:     document.getElementById('cmp-phone')?.checked,
-                distance:  document.getElementById('cmp-distance')?.checked,
+                category: document.getElementById('cmp-category')?.checked,
+                deal: document.getElementById('cmp-deal')?.checked,
+                address: document.getElementById('cmp-address')?.checked,
+                phone: document.getElementById('cmp-phone')?.checked,
+                distance: document.getElementById('cmp-distance')?.checked,
             };
 
             if (!Object.values(show).some(Boolean)) {
@@ -3934,8 +4095,8 @@ Guidelines:
                 rows.push(`
                     <tr>
                         <td class="cmp-label">Rating</td>
-                        <td style="${sA_}">${avgA.toFixed(1)} / 5<br><span style="color:var(--accent);font-size:1.1rem;">${'★'.repeat(Math.round(avgA))}${'☆'.repeat(5-Math.round(avgA))}</span></td>
-                        <td style="${sB_}">${avgB.toFixed(1)} / 5<br><span style="color:var(--accent);font-size:1.1rem;">${'★'.repeat(Math.round(avgB))}${'☆'.repeat(5-Math.round(avgB))}</span></td>
+                        <td style="${sA_}">${avgA.toFixed(1)} / 5<br><span style="color:var(--accent);font-size:1.1rem;">${'★'.repeat(Math.round(avgA))}${'☆'.repeat(5 - Math.round(avgA))}</span></td>
+                        <td style="${sB_}">${avgB.toFixed(1)} / 5<br><span style="color:var(--accent);font-size:1.1rem;">${'★'.repeat(Math.round(avgB))}${'☆'.repeat(5 - Math.round(avgB))}</span></td>
                     </tr>`);
             }
             if (show.reviews) {
@@ -4200,8 +4361,8 @@ Guidelines:
         function nextJudgeStep() {
             judgeStepIndex += 1;
             const stepText = document.getElementById('judgeModeStepText');
-            const nextBtn  = document.getElementById('judgeModeNextBtn');
-            const badge    = document.getElementById('judgeStepBadge');
+            const nextBtn = document.getElementById('judgeModeNextBtn');
+            const badge = document.getElementById('judgeStepBadge');
             if (judgeStepIndex >= judgeSteps.length) {
                 stepText.textContent = 'Tour complete — all 8 checkpoints covered.';
                 nextBtn.textContent = 'Restart';
@@ -4239,7 +4400,7 @@ Guidelines:
             currentCategory = VALID_CATEGORIES.includes(nextCategory) ? nextCategory : 'all';
             currentFilter = 'all';
             updateTopControlLabels();
-            
+
             applyCurrentFilter();
         }
 
@@ -4256,7 +4417,7 @@ Guidelines:
         function switchAuthTab(tab) {
             const tabs = document.querySelectorAll('.auth-tab');
             tabs.forEach(t => t.classList.remove('active'));
-            
+
             if (tab === 'login') {
                 tabs[0].classList.add('active');
                 document.getElementById('loginForm').classList.remove('hidden');
@@ -4445,7 +4606,7 @@ Guidelines:
                             <div style="background:var(--bg-secondary);border-radius:8px;padding:0.75rem 0.9rem;font-size:0.85rem;border-left:3px solid var(--accent-cyan);">
                                 <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
                                     <strong style="color:var(--primary);font-size:0.82rem;">${latestReview.user}</strong>
-                                    <span style="color:var(--accent);font-size:0.82rem;">${'★'.repeat(latestReview.rating)}${'☆'.repeat(5-latestReview.rating)}</span>
+                                    <span style="color:var(--accent);font-size:0.82rem;">${'★'.repeat(latestReview.rating)}${'☆'.repeat(5 - latestReview.rating)}</span>
                                 </div>
                                 <p style="color:var(--text-primary);margin:0;line-height:1.5;">${latestReview.text.length > 90 ? latestReview.text.slice(0, 90) + '…' : latestReview.text}</p>
                                 <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
@@ -4622,8 +4783,8 @@ Guidelines:
             const searchInput = document.getElementById('searchInput');
             const searchQuery = (searchInput ? searchInput.value : '').trim().toLowerCase();
             if (searchQuery) {
-                filtered = filtered.filter(b => 
-                    b.name.toLowerCase().includes(searchQuery) || 
+                filtered = filtered.filter(b =>
+                    b.name.toLowerCase().includes(searchQuery) ||
                     b.category.toLowerCase().includes(searchQuery)
                 );
             }
@@ -4736,7 +4897,7 @@ Guidelines:
             const favs = userState.favorites;
             const index = favs.indexOf(businessId);
             const business = allBusinesses.find(b => b.id === businessId);
-            
+
             if (index > -1) {
                 favs.splice(index, 1);
                 addActivity(`Removed ${business.name} from favorites`);
@@ -4744,7 +4905,7 @@ Guidelines:
                 favs.push(businessId);
                 addActivity(`Added ${business.name} to favorites`);
             }
-            
+
             saveAppState();
             refreshCurrentView();
         }
@@ -4767,11 +4928,11 @@ Guidelines:
                 }
             });
 
-            const topCategory = Object.keys(categories).reduce((a, b) => 
+            const topCategory = Object.keys(categories).reduce((a, b) =>
                 categories[a] > categories[b] ? a : b
             );
 
-            return allBusinesses.filter(b => 
+            return allBusinesses.filter(b =>
                 b.category === topCategory && !favs.includes(b.id)
             );
         }
@@ -4810,8 +4971,8 @@ Guidelines:
         function toggleCaptcha() {
             captchaChecked = !captchaChecked;
             const checkbox = document.getElementById('captchaCheckbox');
-            const check    = document.getElementById('captchaCheck');
-            const widget   = document.getElementById('captchaWidget');
+            const check = document.getElementById('captchaCheck');
+            const widget = document.getElementById('captchaWidget');
             checkbox.classList.toggle('checked', captchaChecked);
             check.classList.toggle('hidden', !captchaChecked);
             if (widget) widget.setAttribute('aria-checked', captchaChecked.toString());
@@ -4927,7 +5088,7 @@ Guidelines:
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        
+
                         // Trigger counter animation for stats
                         if (entry.target.classList.contains('stat-item')) {
                             animateStatNumber(entry.target);
@@ -4946,7 +5107,7 @@ Guidelines:
 
             // Run initially and after any content update
             animateOnScroll();
-            
+
             // Re-observe when content changes
             window.addEventListener('contentUpdated', animateOnScroll);
         }
@@ -4955,14 +5116,14 @@ Guidelines:
         function animateStatNumber(statItem) {
             const numberEl = statItem.querySelector('.stat-number');
             if (!numberEl || numberEl.dataset.animated) return;
-            
+
             numberEl.dataset.animated = 'true';
             const targetText = numberEl.textContent;
             const hasPlus = targetText.includes('+');
             const targetNum = parseInt(targetText.replace(/\D/g, ''));
-            
+
             if (isNaN(targetNum)) return;
-            
+
             let current = 0;
             const increment = targetNum / 30;
             const timer = setInterval(() => {
@@ -5019,7 +5180,8 @@ Guidelines:
             initAccessibilityShortcuts();
             hydrateFromRemoteState();
         });
-        </script>
+    </script>
 
 </body>
+
 </html>
