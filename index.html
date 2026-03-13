@@ -105,6 +105,8 @@
             --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 14px 32px rgba(0, 0, 0, 0.5);
             --focus-ring: rgba(59, 130, 246, 0.4);
+            --accent-light: #fca5a5;
+            --accent: #ef4444;
         }
 
         body {
@@ -3772,6 +3774,37 @@
         async function askChatBot(question, showUserBubble = false) {
             if (chatBotTyping) return;
             if (showUserBubble) appendChatMessage(question, 'user');
+
+            // Hardcoded responses for suggested questions
+            const lowerQ = question.toLowerCase().trim();
+            const hardcodedResponses = {
+                'best rated restaurant?': "Based on the community ratings, Bella's Italian Kitchen, Artisan Bakery & Pastries, and Zenith Yoga Studio are among our top-rated spots, boasting stellar average ratings!",
+                'what deals are available?': "There are some great deals right now! The Morning Brew Café has 'Buy 2 coffees, get 1 free', Green Valley Grocery offers '20% off organic produce every Wednesday', and Sunset Fitness Center has 'No joining fee for January signups'.",
+                'recommend a gym': "Sunset Fitness Center is a great choice! Reviews praise their amazing trainers and free weight section. Plus, they currently have no joining fee for January.",
+                'which business has the most reviews?': "Bella's Italian Kitchen, Sunset Fitness Center, and Quick Cuts Hair Salon currently have the most feedback, with 5 reviews each from the community.",
+                'compare food options': "We have a few great food options! Bella's Italian Kitchen is perfect for authentic Italian, while The Morning Brew Café is great for coffee and pastries. Artisan Bakery & Pastries is also a fantastic choice for freshly baked goods.",
+                'pet grooming services?': "Paws & Claws Pet Grooming is our local pet service. They currently offer 10% off your first grooming appointment!"
+            };
+
+            if (hardcodedResponses[lowerQ]) {
+                chatBotTyping = true;
+                const typingEl = appendChatMessage('', 'bot', true);
+                
+                setTimeout(() => {
+                    chatBotTyping = false;
+                    const reply = hardcodedResponses[lowerQ];
+                    chatHistory.push({ role: 'assistant', content: reply });
+                    if (typingEl && typingEl.parentNode) {
+                        typingEl.textContent = reply;
+                        typingEl.style.opacity = '0';
+                        typingEl.style.transition = 'opacity 0.3s';
+                        setTimeout(() => { typingEl.style.opacity = '1'; }, 50);
+                    }
+                    const msgs = document.getElementById('chatMessages');
+                    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+                }, 800);
+                return;
+            }
 
             // Build a compact business summary to give Claude context
             const businessContext = allBusinesses.map(b => {
