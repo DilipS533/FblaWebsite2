@@ -3798,56 +3798,63 @@ Guidelines:
 - If unsure, say so rather than guess.`;
 
             // Add user message to history
-            chatHistory.push({ role: 'user', content: question });
+chatHistory.push({ role: 'user', content: question });
 
-            chatBotTyping = true;
-            const typingEl = appendChatMessage('', 'bot', true);
+chatBotTyping = true;
+const typingEl = appendChatMessage('', 'bot', true);
 
-            try {
-                const response = await fetch("/api/chat", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        max_tokens: 1000,
-                        messages: [
-                            { role: 'system', content: systemPrompt },
-                            ...chatHistory
-                        ]
-                    })
-                });
+try {
+    const response = await fetch("/api/chat", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            max_tokens: 1000,
+            messages: [
+                { role: 'system', content: systemPrompt },
+                ...chatHistory
+            ]
+        })
+    });
 
-                const data = await response.json();
-                const reply = data.content?.[0]?.text
-                    || data.choices?.[0]?.message?.content
-                    || data.answer || data.text || data.reply || data.message
-                    || "Sorry, I couldn't get a response. Please try again!";
+    const data = await response.json();
 
-                // Add assistant reply to history for multi-turn context
-                chatHistory.push({ role: 'assistant', content: reply });
+    // IMPORTANT: show backend errors instead of hiding them
+    if (!response.ok) {
+        throw new Error(data.error || "Backend request failed");
+    }
 
-                // Keep history to last 10 turns to avoid token overflow
-                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+    const reply = data.choices?.[0]?.message?.content
+        || data.content?.[0]?.text
+        || data.answer || data.text || data.reply || data.message
+        || "Sorry, I couldn't get a response. Please try again!";
 
-                // Replace typing indicator with actual response
-                if (typingEl && typingEl.parentNode) {
-                    typingEl.textContent = reply;
-                    typingEl.style.opacity = '0';
-                    typingEl.style.transition = 'opacity 0.3s';
-                    setTimeout(() => { typingEl.style.opacity = '1'; }, 50);
-                }
+    // Add assistant reply to history for multi-turn context
+    chatHistory.push({ role: 'assistant', content: reply });
 
-            } catch (err) {
-                if (typingEl && typingEl.parentNode) {
-                    typingEl.textContent = "Couldn't connect right now. Check your connection and try again.";
-                }
-            } finally {
-                chatBotTyping = false;
-                const msgs = document.getElementById('chatMessages');
-                if (msgs) msgs.scrollTop = msgs.scrollHeight;
-                renderChatSuggestions();
-            }
-        }
+    // Keep history to last 10 turns to avoid token overflow
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
+    // Replace typing indicator with actual response
+    if (typingEl && typingEl.parentNode) {
+        typingEl.textContent = reply;
+        typingEl.style.opacity = '0';
+        typingEl.style.transition = 'opacity 0.3s';
+        setTimeout(() => { typingEl.style.opacity = '1'; }, 50);
+    }
+
+} catch (err) {
+    console.error("Chat error:", err);
+
+    if (typingEl && typingEl.parentNode) {
+        typingEl.textContent = err.message || "Couldn't connect right now. Check your connection and try again.";
+    }
+} finally {
+    chatBotTyping = false;
+    const msgs = document.getElementById('chatMessages');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+    renderChatSuggestions();
+}
 
         // ── Coupon Section — searchable deal cards ────────────────────────────
         function filterCoupons(query) {
@@ -5352,6 +5359,7 @@ Guidelines:
             initAccessibilityShortcuts();
             hydrateFromRemoteState();
         });
+    }
     </script>
 
 </body>

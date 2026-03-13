@@ -1,57 +1,54 @@
 export default async function handler(req, res) {
+  // CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    console.error("OPENAI_API_KEY is not set");
+    return res.status(500).json({ error: "Server configuration error" });
+  }
+
+  try {
+    const { messages } = req.body;
+
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: "messages array required" });
     }
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: messages,
+        max_tokens: 300
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("OpenAI API error:", data);
+      return res.status(500).json({
+        error: data.error?.message || "OpenAI API request failed"
+      });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-        console.error('OPENAI_API_KEY is not set');
-        return res.status(500).json({ error: 'Server configuration error' });
-    }
-
-    try {
-
-        const { model, max_tokens, messages } = req.body;
-
-        if (!messages || !Array.isArray(messages)) {
-            return res.status(400).json({ error: 'messages array required' });
-        }
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: model || "gpt-4o-mini",
-                messages: messages,
-                max_tokens: max_tokens || 1000
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("OpenAI API error:", data);
-            return res.status(500).json({ error: data.error?.message || "OpenAI API error" });
-        }
-
-        res.status(200).json(data);
-
-    } catch (error) {
-
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
-
-    }
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 }
