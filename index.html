@@ -1982,105 +1982,133 @@
             <div id="ts-logo-tag">Local picks from local people</div>
         </div>
     </div>
-
     <script>
         (function () {
-            /**
-             * @typedef {Object} IntroPin
-             * @property {number} x - X position percentage within the intro canvas.
-             * @property {number} y - Y position percentage within the intro canvas.
-             * @property {string} color - Pin fill color.
-             * @property {string} icon - Emoji/character shown in the pin.
-             * @property {number} delay - Animation delay in milliseconds.
-             * @property {string} [label] - Optional label text for the pin.
-             * @property {boolean} [isCenter] - Marks the focal pin.
-             */
+            // Save the original HTML for replaying
+            var originalIntroHTML = document.getElementById('ts-intro').innerHTML;
+            var introTimeout1, introTimeout2;
 
-            /** @type {IntroPin[]} */
-            var PINS = [
-                { x: 20, y: 34, color: '#E31E24', icon: '\u{1F37D}', delay: 200 },
-                { x: 37, y: 57, color: '#00A0D2', icon: '\u2615', delay: 450 },
-                { x: 62, y: 27, color: '#0EA5E9', icon: '\uD83D\uDCAA', delay: 700 },
-                { x: 77, y: 51, color: '#004080', icon: '\uD83D\uDCBB', delay: 950 },
-                { x: 14, y: 66, color: '#6366F1', icon: '\u2702', delay: 1200 },
-                { x: 55, y: 71, color: '#F59E0B', icon: '\uD83E\uDD50', delay: 1450 },
-                { x: 83, y: 32, color: '#10B981', icon: '\uD83E\uDDD8', delay: 1700 },
-            ];
-            /** @type {IntroPin} */
-            var CENTER = { x: 48, y: 46, color: '#E31E24', icon: '\u2605', delay: 2400, label: 'TownSquare', isCenter: true };
+            window.runIntroAnimation = function () {
+                /**
+                 * @typedef {Object} IntroPin
+                 * @property {number} x - X position percentage within the intro canvas.
+                 * @property {number} y - Y position percentage within the intro canvas.
+                 * @property {string} color - Pin fill color.
+                 * @property {string} icon - Emoji/character shown in the pin.
+                 * @property {number} delay - Animation delay in milliseconds.
+                 * @property {string} [label] - Optional label text for the pin.
+                 * @property {boolean} [isCenter] - Marks the focal pin.
+                 */
 
-            /**
-             * Builds and animates a single intro pin element.
-             * @param {IntroPin} p - Pin configuration.
-             * @returns {void}
-             */
-            function makePin(p) {
-                var big = !!p.isCenter;
-                var sz = big ? 54 : 36, iSz = big ? 22 : 14, fSz = big ? 18 : 12;
-                var wrap = document.createElement('div');
-                wrap.className = 'ts-pin-wrapper';
-                wrap.style.left = p.x + '%'; wrap.style.top = p.y + '%';
-                var inner = document.createElement('div');
-                inner.style.cssText = 'position:relative;display:inline-flex;align-items:center;justify-content:center;';
-                if (p.label) {
-                    var lbl = document.createElement('div');
-                    lbl.style.cssText = 'position:absolute;top:-42px;left:50%;transform:translateX(-50%) rotate(45deg);background:var(--primary-dark);color:#fff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.5s ease;font-family:var(--font-body);border:1px solid rgba(0,160,210,0.4);letter-spacing:0.5px;';
-                    lbl.textContent = p.label; lbl.id = 'ts-center-label';
-                    inner.appendChild(lbl);
-                }
-                var pin = document.createElement('div');
-                if (p.isCenter) { pin.id = 'ts-center-pin'; }
-                pin.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:' + p.color + ';border-radius:50% 50% 50% 0;transform:rotate(-45deg);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.2);';
-                var dot = document.createElement('div');
-                dot.style.cssText = 'width:' + iSz + 'px;height:' + iSz + 'px;background:rgba(255,255,255,0.9);border-radius:50%;position:absolute;';
-                var ico = document.createElement('span');
-                ico.style.cssText = 'position:absolute;font-size:' + fSz + 'px;transform:rotate(45deg);z-index:1;';
-                ico.textContent = p.icon;
-                pin.appendChild(dot); pin.appendChild(ico);
-                inner.appendChild(pin);
-                var shadow = document.createElement('div');
-                shadow.style.cssText = 'width:24px;height:8px;background:rgba(0,0,0,0.3);border-radius:50%;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) scaleX(0);filter:blur(4px);opacity:0;transition:all 0.35s ease;';
-                inner.appendChild(shadow);
-                var ripple = document.createElement('div');
-                ripple.style.cssText = 'position:absolute;width:14px;height:14px;border-radius:50%;bottom:-28px;left:50%;transform:translateX(-50%);';
-                inner.appendChild(ripple);
-                wrap.appendChild(inner);
-                document.getElementById('ts-pins').appendChild(wrap);
-                setTimeout(function () {
-                    wrap.style.animation = 'tsPinDrop 0.75s cubic-bezier(0.22,1.25,0.36,1) forwards';
+                /** @type {IntroPin[]} */
+                var PINS = [
+                    { x: 20, y: 34, color: '#E31E24', icon: '\u{1F37D}', delay: 200 },
+                    { x: 37, y: 57, color: '#00A0D2', icon: '\u2615', delay: 450 },
+                    { x: 62, y: 27, color: '#0EA5E9', icon: '\uD83D\uDCAA', delay: 700 },
+                    { x: 77, y: 51, color: '#004080', icon: '\uD83D\uDCBB', delay: 950 },
+                    { x: 14, y: 66, color: '#6366F1', icon: '\u2702', delay: 1200 },
+                    { x: 55, y: 71, color: '#F59E0B', icon: '\uD83E\uDD50', delay: 1450 },
+                    { x: 83, y: 32, color: '#10B981', icon: '\uD83E\uDDD8', delay: 1700 },
+                ];
+                /** @type {IntroPin} */
+                var CENTER = { x: 48, y: 46, color: '#E31E24', icon: '\u2605', delay: 2400, label: 'TownSquare', isCenter: true };
+
+                /**
+                 * Builds and animates a single intro pin element.
+                 * @param {IntroPin} p - Pin configuration.
+                 * @returns {void}
+                 */
+                function makePin(p) {
+                    var big = !!p.isCenter;
+                    var sz = big ? 54 : 36, iSz = big ? 22 : 14, fSz = big ? 18 : 12;
+                    var wrap = document.createElement('div');
+                    wrap.className = 'ts-pin-wrapper';
+                    wrap.style.left = p.x + '%'; wrap.style.top = p.y + '%';
+                    var inner = document.createElement('div');
+                    inner.style.cssText = 'position:relative;display:inline-flex;align-items:center;justify-content:center;';
+                    if (p.label) {
+                        var lbl = document.createElement('div');
+                        lbl.style.cssText = 'position:absolute;top:-42px;left:50%;transform:translateX(-50%) rotate(45deg);background:var(--primary-dark);color:#fff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.5s ease;font-family:var(--font-body);border:1px solid rgba(0,160,210,0.4);letter-spacing:0.5px;';
+                        lbl.textContent = p.label; lbl.id = 'ts-center-label';
+                        inner.appendChild(lbl);
+                    }
+                    var pin = document.createElement('div');
+                    if (p.isCenter) { pin.id = 'ts-center-pin'; }
+                    pin.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:' + p.color + ';border-radius:50% 50% 50% 0;transform:rotate(-45deg);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.2);';
+                    var dot = document.createElement('div');
+                    dot.style.cssText = 'width:' + iSz + 'px;height:' + iSz + 'px;background:rgba(255,255,255,0.9);border-radius:50%;position:absolute;';
+                    var ico = document.createElement('span');
+                    ico.style.cssText = 'position:absolute;font-size:' + fSz + 'px;transform:rotate(45deg);z-index:1;';
+                    ico.textContent = p.icon;
+                    pin.appendChild(dot); pin.appendChild(ico);
+                    inner.appendChild(pin);
+                    var shadow = document.createElement('div');
+                    shadow.style.cssText = 'width:24px;height:8px;background:rgba(0,0,0,0.3);border-radius:50%;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) scaleX(0);filter:blur(4px);opacity:0;transition:all 0.35s ease;';
+                    inner.appendChild(shadow);
+                    var ripple = document.createElement('div');
+                    ripple.style.cssText = 'position:absolute;width:14px;height:14px;border-radius:50%;bottom:-28px;left:50%;transform:translateX(-50%);';
+                    inner.appendChild(ripple);
+                    wrap.appendChild(inner);
+                    document.getElementById('ts-pins').appendChild(wrap);
                     setTimeout(function () {
-                        shadow.style.transform = 'translateX(-50%) scaleX(1)';
-                        shadow.style.opacity = '1';
-                        ripple.style.animation = (big ? 'tsRippleRed' : 'tsRipple') + ' 0.9s ease-out forwards';
-                        if (p.label) { var l = document.getElementById('ts-center-label'); if (l) l.style.opacity = '1'; }
-                    }, 440);
-                }, p.delay);
-            }
-            PINS.forEach(makePin); makePin(CENTER);
+                        wrap.style.animation = 'tsPinDrop 0.75s cubic-bezier(0.22,1.25,0.36,1) forwards';
+                        setTimeout(function () {
+                            shadow.style.transform = 'translateX(-50%) scaleX(1)';
+                            shadow.style.opacity = '1';
+                            ripple.style.animation = (big ? 'tsRippleRed' : 'tsRipple') + ' 0.9s ease-out forwards';
+                            if (p.label) { var l = document.getElementById('ts-center-label'); if (l) l.style.opacity = '1'; }
+                        }, 440);
+                    }, p.delay);
+                }
+                PINS.forEach(makePin); makePin(CENTER);
 
-            /**
-             * Zooms the intro overlay toward the center pin to reveal the app.
-             * @returns {void}
-             */
-            function zoomToCenterPin() {
+                /**
+                 * Zooms the intro overlay toward the center pin to reveal the app.
+                 * @returns {void}
+                 */
+                function zoomToCenterPin() {
+                    var intro = document.getElementById('ts-intro');
+                    var target = document.getElementById('ts-center-pin');
+                    if (!intro || !target) return;
+                    var rect = target.getBoundingClientRect();
+                    var originX = rect.left + rect.width / 2;
+                    var originY = rect.top + rect.height / 2;
+                    intro.style.setProperty('--ts-zoom-x', originX + 'px');
+                    intro.style.setProperty('--ts-zoom-y', originY + 'px');
+                    intro.classList.add('ts-zoom');
+                    intro.style.pointerEvents = 'none';
+                }
+
+                introTimeout1 = setTimeout(zoomToCenterPin, 3900);
+
+                introTimeout2 = setTimeout(function () {
+                    var intro = document.getElementById('ts-intro'); if (!intro) return;
+                    intro.style.display = 'none';
+                }, 5200);
+            };
+
+            window.replayIntro = function() {
                 var intro = document.getElementById('ts-intro');
-                var target = document.getElementById('ts-center-pin');
-                if (!intro || !target) return;
-                var rect = target.getBoundingClientRect();
-                var originX = rect.left + rect.width / 2;
-                var originY = rect.top + rect.height / 2;
-                intro.style.setProperty('--ts-zoom-x', originX + 'px');
-                intro.style.setProperty('--ts-zoom-y', originY + 'px');
-                intro.classList.add('ts-zoom');
-                intro.style.pointerEvents = 'none';
-            }
+                if(!intro) return;
+                
+                // Clear any active timeouts from a previous run just in case
+                clearTimeout(introTimeout1);
+                clearTimeout(introTimeout2);
 
-            setTimeout(zoomToCenterPin, 3900);
+                // Reset intro overlay state
+                intro.style.display = '';
+                intro.classList.remove('ts-zoom');
+                intro.style.pointerEvents = 'auto';
+                
+                // Restore HTML structure to reset animations
+                intro.innerHTML = originalIntroHTML;
+                
+                // Re-run the animation
+                window.runIntroAnimation();
+            };
 
-            setTimeout(function () {
-                var intro = document.getElementById('ts-intro'); if (!intro) return;
-                intro.style.display = 'none';
-            }, 5200);
+            // Run initially
+            window.runIntroAnimation();
         })();
     </script>
 
@@ -2168,11 +2196,13 @@
             <div class="user-bar" role="navigation" aria-label="User controls">
                 <div class="user-info">Welcome, <span id="currentUser">User</span>!</div>
                 <div class="user-controls">
+                    <button type="button" class="btn btn-secondary" onclick="window.replayIntro()"
+                        aria-label="Replay starting animation">Replay Intro</button>
                     <button type="button" class="btn btn-secondary" onclick="startJudgeMode()"
                         aria-label="Start demo tour">Demo Tour</button>
                     <button type="button" class="dark-mode-toggle" onclick="toggleDarkMode()"
                         aria-label="Toggle dark mode">
-                        <span id="darkModeIcon" aria-hidden="true">🌙</span>
+                        <span id="darkModeIcon" aria-hidden="true">&#x1F319;</span>
                         <span id="darkModeText">Dark Mode</span>
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="toggleProfile()" aria-expanded="false"
@@ -5327,3 +5357,7 @@ Guidelines:
 </body>
 
 </html>
+
+
+
+
