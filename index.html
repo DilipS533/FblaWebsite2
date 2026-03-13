@@ -3817,11 +3817,17 @@ Guidelines:
                     })
                 });
 
-                const data = await response.json();
-                const reply = data.content?.[0]?.text
-                    || data.choices?.[0]?.message?.content
-                    || data.answer || data.text || data.reply || data.message
-                    || "Sorry, I couldn't get a response. Please try again!";
+const data = await response.json();
+
+if (!response.ok) {
+    console.error("Backend error:", data);
+}
+
+const reply = data.error
+    || data.content?.[0]?.text
+    || data.choices?.[0]?.message?.content
+    || data.answer || data.text || data.reply || data.message
+    || "Sorry, I couldn't get a response. Please try again!";
 
                 // Add assistant reply to history for multi-turn context
                 chatHistory.push({ role: 'assistant', content: reply });
