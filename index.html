@@ -1985,6 +1985,18 @@
 
     <script>
         (function () {
+            /**
+             * @typedef {Object} IntroPin
+             * @property {number} x - X position percentage within the intro canvas.
+             * @property {number} y - Y position percentage within the intro canvas.
+             * @property {string} color - Pin fill color.
+             * @property {string} icon - Emoji/character shown in the pin.
+             * @property {number} delay - Animation delay in milliseconds.
+             * @property {string} [label] - Optional label text for the pin.
+             * @property {boolean} [isCenter] - Marks the focal pin.
+             */
+
+            /** @type {IntroPin[]} */
             var PINS = [
                 { x: 20, y: 34, color: '#E31E24', icon: '\u{1F37D}', delay: 200 },
                 { x: 37, y: 57, color: '#00A0D2', icon: '\u2615', delay: 450 },
@@ -1994,8 +2006,14 @@
                 { x: 55, y: 71, color: '#F59E0B', icon: '\uD83E\uDD50', delay: 1450 },
                 { x: 83, y: 32, color: '#10B981', icon: '\uD83E\uDDD8', delay: 1700 },
             ];
+            /** @type {IntroPin} */
             var CENTER = { x: 48, y: 46, color: '#E31E24', icon: '\u2605', delay: 2400, label: 'TownSquare', isCenter: true };
 
+            /**
+             * Builds and animates a single intro pin element.
+             * @param {IntroPin} p - Pin configuration.
+             * @returns {void}
+             */
             function makePin(p) {
                 var big = !!p.isCenter;
                 var sz = big ? 54 : 36, iSz = big ? 22 : 14, fSz = big ? 18 : 12;
@@ -2040,6 +2058,10 @@
             }
             PINS.forEach(makePin); makePin(CENTER);
 
+            /**
+             * Zooms the intro overlay toward the center pin to reveal the app.
+             * @returns {void}
+             */
             function zoomToCenterPin() {
                 var intro = document.getElementById('ts-intro');
                 var target = document.getElementById('ts-center-pin');
@@ -2770,8 +2792,99 @@
         // ============================================
 
         /**
-         * Business data structure - stores all local businesses
-         * Each business has: id, name, category, address, phone, deal, reviews[]
+         * @typedef {Object} Review
+         * @property {string} user - Username who left the review.
+         * @property {number} rating - Star rating from 1 to 5.
+         * @property {string} text - Review body text.
+         * @property {string} date - ISO date string (YYYY-MM-DD).
+         * @property {number} likes - Helpful vote count.
+         * @property {number} dislikes - Not helpful vote count.
+         */
+
+        /**
+         * @typedef {Object} Business
+         * @property {number} id - Unique identifier.
+         * @property {string} name - Display name.
+         * @property {string} category - Business category label.
+         * @property {string} address - Street address.
+         * @property {string} phone - Contact number.
+         * @property {string} deal - Current promotion.
+         * @property {Review[]} reviews - Customer reviews.
+         * @property {string} [couponCode] - Optional coupon code override.
+         */
+
+        /**
+         * @typedef {Object.<string, 'like' | 'dislike'>} ReviewInteractionMap
+         */
+
+        /**
+         * @typedef {Object} UserRecord
+         * @property {string} password - Plaintext password (demo only).
+         * @property {number[]} favorites - Business ids favorited by the user.
+         * @property {Review[]} reviews - Reviews authored by the user (legacy slot).
+         * @property {ReviewInteractionMap} reviewInteractions - Per-review likes/dislikes.
+         * @property {boolean} [isAdmin] - Admin privilege flag.
+         */
+
+        /**
+         * @typedef {Object} ActivityItem
+         * @property {string} text - Activity description.
+         * @property {string} time - Local time string.
+         * @property {string} date - Local date string.
+         */
+
+        /**
+         * @typedef {[number, number]} LatLng
+         */
+
+        /**
+         * @typedef {Object} MapLabel
+         * @property {string} name - Label text.
+         * @property {LatLng} coords - Map coordinates.
+         */
+
+        /**
+         * @typedef {Object} SentimentTotals
+         * @property {number} positive
+         * @property {number} neutral
+         * @property {number} negative
+         */
+
+        /**
+         * @typedef {Object} ReviewStats
+         * @property {number} positive
+         * @property {number} negative
+         */
+
+        /**
+         * @typedef {Object} AppState
+         * @property {Object.<string, UserRecord>} users
+         * @property {Business[]} allBusinesses
+         * @property {ActivityItem[]} activityLog
+         */
+
+        /**
+         * @typedef {Object} ChatMessage
+         * @property {'user'|'assistant'|'system'} role
+         * @property {string} content
+         */
+
+        /**
+         * @typedef {Object} JudgeStep
+         * @property {string} text
+         * @property {function(): void} action
+         */
+
+        /**
+         * @typedef {Object} FlaggedReview
+         * @property {Business} business
+         * @property {Review} review
+         * @property {number} reviewIndex
+         */
+
+        /**
+         * Business data set for the demo app.
+         * @type {Business[]}
          */
         let businesses = [
             {
@@ -2918,8 +3031,8 @@
         ];
 
         /**
-         * User authentication and data storage
-         * Structure: username -> { password, favorites[], reviews[], reviewInteractions{} }
+         * User authentication and stored preferences by username.
+         * @type {Object.<string, UserRecord>}
          */
         let users = {
             demo: {
@@ -2937,19 +3050,33 @@
             }
         };
 
+        /** @type {string|null} */
         let currentUser = null;
+        /** @type {number|null} */
         let selectedBusinessForReview = null;
+        /** @type {number} */
         let selectedRating = 0;
+        /** @type {boolean} */
         let captchaChecked = false;
+        /** @type {string} */
         let currentFilter = 'all';
+        /** @type {string} */
         let currentCategory = 'all';
+        /** @type {string} */
         let currentSort = 'default';
+        /** @type {string[]} */
         const VALID_CATEGORIES = ['all', 'food', 'services', 'health', 'retail'];
+        /** @type {string[]} */
         const VALID_FILTERS = ['all', 'positive', 'negative', 'highly-rated'];
+        /** @type {Business[]} */
         let allBusinesses = [...businesses];
+        /** @type {ActivityItem[]} */
         let activityLog = [];
+        /** @type {string} */
         const APP_STORAGE_KEY = 'townsquare-app-state-v1';
+        /** @type {LatLng} */
         const MAP_CENTER = [33.7490, -84.3880];
+        /** @type {Object.<number, LatLng>} */
         const MAP_COORDS = {
             1: [33.7603, -84.3880],
             2: [33.7726, -84.3654],
@@ -2962,6 +3089,7 @@
             9: [33.7477, -84.3696],
             10: [33.7874, -84.3831]
         };
+        /** @type {MapLabel[]} */
         const FAKE_DISTRICT_LABELS = [
             { name: 'Northgate Borough', coords: [33.8018, -84.4020] },
             { name: 'Riverbend Commons', coords: [33.7637, -84.4185] },
@@ -2969,6 +3097,7 @@
             { name: 'Easton Arts Quarter', coords: [33.7665, -84.3496] },
             { name: 'South Market Row', coords: [33.7374, -84.3895] }
         ];
+        /** @type {MapLabel[]} */
         const FAKE_STREET_LABELS = [
             { name: 'Founders Parkway', coords: [33.7730, -84.4020] },
             { name: 'Civic Loop', coords: [33.7640, -84.3882] },
@@ -2976,22 +3105,35 @@
             { name: 'Harborline Drive', coords: [33.7515, -84.3710] },
             { name: 'Elmbridge Street', coords: [33.7440, -84.3955] }
         ];
+        /** @type {Array.<[LatLng, LatLng]>} */
         const FAKE_STREET_LINES = [
             [[33.8025, -84.4085], [33.7360, -84.3600]],
             [[33.7915, -84.4210], [33.7420, -84.3440]],
             [[33.8005, -84.3860], [33.7350, -84.3860]]
         ];
+        /** @type {any|null} */
         let townMap = null;
+        /** @type {any|null} */
         let townMapMarkers = null;
+        /** @type {Object.<number, any>} */
         let townMapBusinessMarkers = {};
+        /** @type {any|null} */
         let categoryChartInstance = null;
+        /** @type {any|null} */
         let ratingChartInstance = null;
+        /** @type {any|null} */
         let sentimentChartInstance = null;
+        /** @type {number} */
         let judgeStepIndex = -1;
+        /** @type {any|null} */
         let supabaseClient = null;
+        /** @type {boolean} */
         let remotePersistenceEnabled = false;
+        /** @type {number|null} */
         let saveStateTimer = null;
+        /** @type {string} */
         let SUPABASE_URL = window.TOWNSQUARE_SUPABASE_URL || localStorage.getItem('townsquare-supabase-url') || '';
+        /** @type {string} */
         let SUPABASE_ANON_KEY = window.TOWNSQUARE_SUPABASE_ANON_KEY || localStorage.getItem('townsquare-supabase-anon-key') || '';
 
         function cloneData(data) {
